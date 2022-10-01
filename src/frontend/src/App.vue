@@ -1,17 +1,17 @@
 <template>
   <div id="app">
-    <PageConstructor />
+    <IndexHome />
   </div>
 </template>
 
 <script>
-import PageConstructor from "@/views/Index";
+import IndexHome from "@/views/Index";
 
 export default {
   name: "App",
 
   components: {
-    PageConstructor,
+    IndexHome,
   },
 };
 </script>
