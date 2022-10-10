@@ -6,7 +6,6 @@
           <div class="content__wrapper">
             <h1 class="title title--big">Конструктор пиццы</h1>
 
-            <!-- COMPLETE -->
             <div class="content__dough">
               <div class="sheet">
                 <h2 class="title title--small sheet__title">Выберите тесто</h2>
@@ -23,9 +22,7 @@
                 </div>
               </div>
             </div>
-            <!-- /COMPLETE -->
 
-            <!-- COMPLETE -->
             <div class="content__diameter">
               <div class="sheet">
                 <h2 class="title title--small sheet__title">Выберите размер</h2>
@@ -41,7 +38,6 @@
                 </div>
               </div>
             </div>
-            <!-- /COMPLETE -->
 
             <div class="content__ingredients">
               <div class="sheet">
@@ -50,7 +46,6 @@
                 </h2>
 
                 <div class="sheet__content ingredients">
-                  <!-- COMPLETE -->
                   <BuilderSauceSelector
                     :items="sauces"
                     :selected="pizzaBuilder.sauce.name"
@@ -58,7 +53,6 @@
                   >
                     <p>Основной соус:</p>
                   </BuilderSauceSelector>
-                  <!-- /COMPLETE -->
 
                   <div class="ingredients__filling">
                     <p>Начинка:</p>
@@ -68,6 +62,7 @@
                         v-for="ingredient in ingredients"
                         :key="ingredient.id"
                         class="ingredients__item"
+                        :draggable="true"
                         tag="li"
                         :label="ingredient.name"
                         @change="selectIngredients"
@@ -84,6 +79,7 @@
               :size="pizzaBuilder.size"
               :ingredients="pizzaBuilder.ingredients"
               class="content__pizza"
+              @selectDrop="dropHandler"
             />
           </div>
         </form>
@@ -135,8 +131,8 @@ export default {
           price: 300,
         },
         sauce: {
-          name: "Сливочный",
-          value: "creamy",
+          name: "Томатный",
+          value: "tomato",
           price: 50,
         },
         size: {
@@ -150,8 +146,6 @@ export default {
 
   methods: {
     selectDough(dough) {
-      console.log(dough);
-
       this.pizzaBuilder.dough.name = dough.name;
       this.pizzaBuilder.dough.type = dough.type;
       this.pizzaBuilder.dough.value = dough.value;
@@ -164,8 +158,6 @@ export default {
     },
 
     selectSize(label) {
-      console.log(label);
-
       this.pizzaBuilder.size.diametr = label;
 
       this.sizes.forEach((size) => {
@@ -176,8 +168,6 @@ export default {
     },
 
     selectSauce(sauce) {
-      console.log(sauce);
-
       this.pizzaBuilder.sauce.name = sauce.name;
       this.pizzaBuilder.sauce.value = sauce.value;
 
@@ -197,8 +187,6 @@ export default {
         }
       });
 
-      console.log(currentFill);
-
       if (this.pizzaBuilder.ingredients.length) {
         const isMatch = this.pizzaBuilder.ingredients.some(
           (fill) => fill.name === currentFill.name
@@ -208,11 +196,17 @@ export default {
           const index = this.pizzaBuilder.ingredients.findIndex(
             (fill) => fill.name === currentFill.name
           );
+          const hasCount = currentFill.hasOwnProperty("count");
 
           if (
+            hasCount &&
             this.pizzaBuilder.ingredients[index].count !== currentFill.count
           ) {
             this.pizzaBuilder.ingredients[index].count = currentFill.count;
+          } else {
+            if (this.pizzaBuilder.ingredients[index].count < 3) {
+              this.pizzaBuilder.ingredients[index].count += 1;
+            }
           }
         } else {
           this.addIngredient(currentFill);
@@ -223,7 +217,15 @@ export default {
     },
 
     addIngredient(ingredient) {
+      if (!ingredient.hasOwnProperty("count")) {
+        ingredient.count = 1;
+      }
+
       this.pizzaBuilder.ingredients.push(ingredient);
+    },
+
+    dropHandler(data) {
+      this.selectIngredients(JSON.parse(data));
     },
   },
 };

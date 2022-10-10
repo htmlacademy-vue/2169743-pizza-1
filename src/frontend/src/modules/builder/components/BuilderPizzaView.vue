@@ -1,5 +1,10 @@
 <template>
-  <div class="pizza" :class="foundationClass">
+  <div
+    class="pizza"
+    :class="foundationClass"
+    @dragover.prevent
+    @drop.prevent="drop"
+  >
     <div class="pizza__wrapper">
       <template v-if="ingredients.length">
         <template v-for="filling in ingredients">
@@ -66,6 +71,11 @@ export default {
       }
 
       return fillingClass;
+    },
+
+    drop(e) {
+      const dataItem = e.dataTransfer.getData("ingredientData");
+      this.$emit("drop", dataItem);
     },
   },
 };

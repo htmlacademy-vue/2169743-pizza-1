@@ -16,6 +16,7 @@
         :sauce="sauce"
         :size="size"
         :ingredients="ingredients"
+        @drop="selectDrop"
       />
     </div>
 
@@ -59,6 +60,12 @@ export default {
     ingredients: {
       type: Array,
       default: () => [],
+    },
+  },
+
+  methods: {
+    selectDrop(data) {
+      this.$emit("selectDrop", data);
     },
   },
 };

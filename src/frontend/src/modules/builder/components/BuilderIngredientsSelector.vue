@@ -1,5 +1,11 @@
 <template>
-  <component :is="tag">
+  <component
+    :is="tag"
+    :draggable="draggable"
+    :id="ingredientValue"
+    @dragstart="dragStart"
+    @dragover.stop
+  >
     <span class="filling" :class="ingredientClass">
       {{ label }}
     </span>
@@ -37,6 +43,11 @@ export default {
     value: {
       type: Number,
       default: 0,
+    },
+
+    draggable: {
+      type: Boolean,
+      default: false,
     },
   },
 
@@ -108,6 +119,14 @@ export default {
       filling.count = count;
 
       this.$emit("change", filling);
+    },
+
+    dragStart(e) {
+      const ingredient = {};
+      ingredient.name = this.label;
+      ingredient.value = this.ingredientValue;
+
+      e.dataTransfer.setData("ingredientData", JSON.stringify(ingredient));
     },
   },
 };
