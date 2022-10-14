@@ -11,10 +11,10 @@
     </span>
 
     <ItemCounter
-      :value="value"
+      :value="countValue"
       class="ingredients__counter"
       :max="3"
-      @change="changeCount"
+      @increase="changeCount"
     />
   </component>
 </template>
@@ -40,9 +40,9 @@ export default {
       required: true,
     },
 
-    value: {
-      type: Number,
-      default: 0,
+    selected: {
+      type: Array,
+      default: () => [],
     },
 
     draggable: {
@@ -109,14 +109,28 @@ export default {
     ingredientClass() {
       return `filling--${this.ingredientValue}`;
     },
+
+    countValue() {
+      let value = 0;
+
+      if (this.selected.length) {
+        this.selected.forEach((filling) => {
+          if (filling.name === this.label) {
+            value = filling.count;
+          }
+        });
+      }
+
+      return value;
+    },
   },
 
   methods: {
-    changeCount(count) {
+    changeCount(state) {
       const filling = {};
       filling.name = this.label;
       filling.value = this.ingredientValue;
-      filling.count = count;
+      filling.countState = state;
 
       this.$emit("change", filling);
     },

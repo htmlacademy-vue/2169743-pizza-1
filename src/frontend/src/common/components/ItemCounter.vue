@@ -3,17 +3,17 @@
     <button
       type="button"
       class="counter__button counter__button--minus"
-      :disabled="count === min"
-      @click="decreaseCounter"
+      :disabled="value === min"
+      @click="countHandler('decrease')"
     >
       <span class="visually-hidden">Меньше</span>
     </button>
-    <input type="text" name="counter" class="counter__input" v-model="count" />
+    <input type="text" name="counter" class="counter__input" :value="value" />
     <button
       type="button"
       class="counter__button counter__button--plus"
-      :disabled="count === max"
-      @click="increaseCounter"
+      :disabled="value === max"
+      @click="countHandler('increase')"
     >
       <span class="visually-hidden">Больше</span>
     </button>
@@ -41,25 +41,9 @@ export default {
     },
   },
 
-  data() {
-    return {
-      count: this.value,
-    };
-  },
-
   methods: {
-    increaseCounter() {
-      this.count++;
-      this.changeHandler();
-    },
-
-    decreaseCounter() {
-      this.count--;
-      this.changeHandler();
-    },
-
-    changeHandler() {
-      this.$emit("change", this.count);
+    countHandler(state) {
+      this.$emit("increase", state);
     },
   },
 };

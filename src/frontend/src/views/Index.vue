@@ -62,9 +62,10 @@
                         v-for="ingredient in ingredients"
                         :key="ingredient.id"
                         class="ingredients__item"
-                        :draggable="true"
                         tag="li"
                         :label="ingredient.name"
+                        :selected="pizzaBuilder.ingredients"
+                        :draggable="true"
                         @change="selectIngredients"
                       />
                     </ul>
@@ -196,13 +197,16 @@ export default {
           const index = this.pizzaBuilder.ingredients.findIndex(
             (fill) => fill.name === currentFill.name
           );
-          const hasCount = currentFill.hasOwnProperty("count");
 
-          if (
-            hasCount &&
-            this.pizzaBuilder.ingredients[index].count !== currentFill.count
-          ) {
-            this.pizzaBuilder.ingredients[index].count = currentFill.count;
+          this.pizzaBuilder.ingredients[index].countState =
+            currentFill.countState;
+
+          const hasState = currentFill.hasOwnProperty("countState");
+          const isDecrease =
+            this.pizzaBuilder.ingredients[index].countState === "decrease";
+
+          if (hasState && isDecrease) {
+            this.pizzaBuilder.ingredients[index].count -= 1;
           } else {
             if (this.pizzaBuilder.ingredients[index].count < 3) {
               this.pizzaBuilder.ingredients[index].count += 1;
