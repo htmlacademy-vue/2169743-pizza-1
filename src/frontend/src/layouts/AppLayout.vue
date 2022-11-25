@@ -15,7 +15,9 @@
         <a href="cart.html">0 ₽</a>
       </div>
       <div class="header__user">
-        <a href="#" class="header__login"><span>Войти</span></a>
+        <router-link to="login" class="header__login">
+          <span>Войти</span>
+        </router-link>
       </div>
     </header>
 
