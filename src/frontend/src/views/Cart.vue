@@ -14,7 +14,7 @@
           <li class="cart-list__item">
             <div class="product cart-list__product">
               <img
-                src="img/product.svg"
+                src="@/assets/img/product.svg"
                 class="product__img"
                 width="56"
                 height="56"
@@ -62,7 +62,7 @@
           <li class="cart-list__item">
             <div class="product cart-list__product">
               <img
-                src="img/product.svg"
+                src="@/assets/img/product.svg"
                 class="product__img"
                 width="56"
                 height="56"
@@ -117,7 +117,7 @@
             <li class="additional-list__item sheet">
               <p class="additional-list__description">
                 <img
-                  src="img/cola.svg"
+                  src="@/assets/img/cola.svg"
                   width="39"
                   height="60"
                   alt="Coca-Cola 0,5 литра"
@@ -155,7 +155,7 @@
             <li class="additional-list__item sheet">
               <p class="additional-list__description">
                 <img
-                  src="img/sauce.svg"
+                  src="@/assets/img/sauce.svg"
                   width="39"
                   height="60"
                   alt="Острый соус"
@@ -193,7 +193,7 @@
             <li class="additional-list__item sheet">
               <p class="additional-list__description">
                 <img
-                  src="img/potato.svg"
+                  src="@/assets/img/potato.svg"
                   width="39"
                   height="60"
                   alt="Картошка из печи"
@@ -278,9 +278,9 @@
     </main>
     <section class="footer">
       <div class="footer__more">
-        <a href="#" class="button button--border button--arrow">
+        <router-link to="/" class="button button--border button--arrow">
           Хочу еще одну
-        </a>
+        </router-link>
       </div>
       <p class="footer__text">
         Перейти к конструктору<br />чтоб собрать ещё одну пиццу
