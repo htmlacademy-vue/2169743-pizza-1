@@ -1,91 +1,89 @@
 <template>
   <div class="page">
-    <AppLayout>
-      <main class="content">
-        <form action="#" method="post">
-          <div class="content__wrapper">
-            <h1 class="title title--big">Конструктор пиццы</h1>
+    <main class="content">
+      <form action="#" method="post">
+        <div class="content__wrapper">
+          <h1 class="title title--big">Конструктор пиццы</h1>
 
-            <div class="content__dough">
-              <div class="sheet">
-                <h2 class="title title--small sheet__title">Выберите тесто</h2>
+          <div class="content__dough">
+            <div class="sheet">
+              <h2 class="title title--small sheet__title">Выберите тесто</h2>
 
-                <div class="sheet__content dough">
-                  <BuilderDoughSelector
-                    v-for="dough in doughes"
-                    :key="dough.id"
-                    :label="dough.name"
-                    :description="dough.description"
-                    :selected="pizzaBuilder.dough.name"
-                    @input="selectDough"
-                  />
-                </div>
+              <div class="sheet__content dough">
+                <BuilderDoughSelector
+                  v-for="dough in doughes"
+                  :key="dough.id"
+                  :label="dough.name"
+                  :description="dough.description"
+                  :selected="pizzaBuilder.dough.name"
+                  @input="selectDough"
+                />
               </div>
             </div>
-
-            <div class="content__diameter">
-              <div class="sheet">
-                <h2 class="title title--small sheet__title">Выберите размер</h2>
-
-                <div class="sheet__content diameter">
-                  <BuilderSizeSelector
-                    v-for="size in sizes"
-                    :key="size.id"
-                    :label="size.name"
-                    :selected="pizzaBuilder.size.diametr"
-                    @input="selectSize"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div class="content__ingredients">
-              <div class="sheet">
-                <h2 class="title title--small sheet__title">
-                  Выберите ингредиенты
-                </h2>
-
-                <div class="sheet__content ingredients">
-                  <BuilderSauceSelector
-                    :items="sauces"
-                    :selected="pizzaBuilder.sauce.name"
-                    @select="selectSauce"
-                  >
-                    <p>Основной соус:</p>
-                  </BuilderSauceSelector>
-
-                  <div class="ingredients__filling">
-                    <p>Начинка:</p>
-
-                    <ul class="ingredients__list">
-                      <BuilderIngredientsSelector
-                        v-for="ingredient in ingredients"
-                        :key="ingredient.id"
-                        class="ingredients__item"
-                        tag="li"
-                        :label="ingredient.name"
-                        :selected="pizzaBuilder.ingredients"
-                        :draggable="true"
-                        @change="selectIngredients"
-                      />
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <SelectorItem
-              :dough="pizzaBuilder.dough"
-              :sauce="pizzaBuilder.sauce"
-              :size="pizzaBuilder.size"
-              :ingredients="pizzaBuilder.ingredients"
-              class="content__pizza"
-              @selectDrop="dropHandler"
-            />
           </div>
-        </form>
-      </main>
-    </AppLayout>
+
+          <div class="content__diameter">
+            <div class="sheet">
+              <h2 class="title title--small sheet__title">Выберите размер</h2>
+
+              <div class="sheet__content diameter">
+                <BuilderSizeSelector
+                  v-for="size in sizes"
+                  :key="size.id"
+                  :label="size.name"
+                  :selected="pizzaBuilder.size.diametr"
+                  @input="selectSize"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="content__ingredients">
+            <div class="sheet">
+              <h2 class="title title--small sheet__title">
+                Выберите ингредиенты
+              </h2>
+
+              <div class="sheet__content ingredients">
+                <BuilderSauceSelector
+                  :items="sauces"
+                  :selected="pizzaBuilder.sauce.name"
+                  @select="selectSauce"
+                >
+                  <p>Основной соус:</p>
+                </BuilderSauceSelector>
+
+                <div class="ingredients__filling">
+                  <p>Начинка:</p>
+
+                  <ul class="ingredients__list">
+                    <BuilderIngredientsSelector
+                      v-for="ingredient in ingredients"
+                      :key="ingredient.id"
+                      class="ingredients__item"
+                      tag="li"
+                      :label="ingredient.name"
+                      :selected="pizzaBuilder.ingredients"
+                      :draggable="true"
+                      @change="selectIngredients"
+                    />
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <SelectorItem
+            :dough="pizzaBuilder.dough"
+            :sauce="pizzaBuilder.sauce"
+            :size="pizzaBuilder.size"
+            :ingredients="pizzaBuilder.ingredients"
+            class="content__pizza"
+            @selectDrop="dropHandler"
+          />
+        </div>
+      </form>
+    </main>
   </div>
 </template>
 
@@ -93,8 +91,6 @@
 import misc from "@/static/misc.json";
 import pizza from "@/static/pizza.json";
 import user from "@/static/user.json";
-
-import AppLayout from "@/layouts/AppLayout";
 
 import SelectorItem from "@/common/components/SelectorItem";
 
@@ -107,7 +103,6 @@ export default {
   name: "IndexHome",
 
   components: {
-    AppLayout,
     SelectorItem,
     BuilderDoughSelector,
     BuilderSauceSelector,
