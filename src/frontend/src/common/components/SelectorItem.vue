@@ -7,29 +7,33 @@
         name="pizza_name"
         placeholder="Введите название пиццы"
         required
+        autocomplete="off"
+        v-model="builder.name"
       />
     </label>
 
     <div class="content__constructor">
       <BuilderPizzaView
-        :dough="dough"
-        :sauce="sauce"
-        :size="size"
-        :ingredients="ingredients"
+        :dough="builder.dough"
+        :sauce="builder.sauce"
+        :size="builder.size"
+        :ingredients="builder.ingredients"
         @drop="selectDrop"
       />
     </div>
 
     <BuilderPriceCounter
-      :dough="dough"
-      :sauce="sauce"
-      :size="size"
-      :ingredients="ingredients"
+      :dough="builder.dough"
+      :sauce="builder.sauce"
+      :size="builder.size"
+      :ingredients="builder.ingredients"
     />
   </div>
 </template>
 
 <script>
+import { mapGetters, mapMutations } from "vuex";
+
 import BuilderPizzaView from "@/modules/builder/components/BuilderPizzaView";
 import BuilderPriceCounter from "@/modules/builder/components/BuilderPriceCounter";
 
@@ -41,29 +45,13 @@ export default {
     BuilderPriceCounter,
   },
 
-  props: {
-    dough: {
-      type: Object,
-      required: true,
-    },
-
-    sauce: {
-      type: Object,
-      required: true,
-    },
-
-    size: {
-      type: Object,
-      required: true,
-    },
-
-    ingredients: {
-      type: Array,
-      default: () => [],
-    },
+  computed: {
+    ...mapGetters("Builder", ["builder", "ingredientCount"]),
   },
 
   methods: {
+    ...mapMutations("Builder", ["SET_BUILDER_NAME"]),
+
     selectDrop(data) {
       this.$emit("selectDrop", data);
     },

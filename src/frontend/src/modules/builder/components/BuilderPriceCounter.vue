@@ -1,11 +1,15 @@
 <template>
   <div class="content__result">
     <p>Итого: {{ pizzaPrice }} ₽</p>
-    <button type="button" class="button" disabled>Готовьте!</button>
+    <button type="submit" class="button" :disabled="disableButton">
+      Готовьте!
+    </button>
   </div>
 </template>
 
 <script>
+import { mapGetters, mapMutations } from "vuex";
+
 export default {
   name: "BuilderPriceCounter",
 
@@ -32,6 +36,8 @@ export default {
   },
 
   computed: {
+    ...mapGetters("Builder", ["ingredientCount", "builderName"]),
+
     totalIngredientsPrice() {
       return this.ingredients.reduce((total, ingredient) => {
         return total + ingredient.price * ingredient.count;
@@ -40,9 +46,29 @@ export default {
 
     pizzaPrice() {
       const price =
-        this.dough.price + this.sauce.price + this.totalIngredientsPrice;
-      return this.size.multi * price;
+        (this.dough.price + this.sauce.price + this.totalIngredientsPrice) *
+        this.size.multi;
+
+      return price;
     },
+
+    disableButton() {
+      return !(this.ingredientCount && this.builderName);
+    },
+  },
+
+  watch: {
+    pizzaPrice(newValue) {
+      this.SET_BUILDER_PRICE(newValue);
+    },
+  },
+
+  mounted() {
+    this.SET_BUILDER_PRICE(this.pizzaPrice);
+  },
+
+  methods: {
+    ...mapMutations("Builder", ["SET_BUILDER_PRICE"]),
   },
 };
 </script>

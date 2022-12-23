@@ -1,5 +1,5 @@
 <template>
-  <div class="counter counter--orange">
+  <div class="counter">
     <button
       type="button"
       class="counter__button counter__button--minus"
@@ -18,6 +18,7 @@
     <button
       type="button"
       class="counter__button counter__button--plus"
+      :class="buttonClass"
       :disabled="value === max"
       @click="countHandler('increase')"
     >
@@ -27,6 +28,8 @@
 </template>
 
 <script>
+const COLORS = ["orange"];
+
 export default {
   name: "ItemCounter",
 
@@ -43,13 +46,26 @@ export default {
 
     max: {
       type: Number,
-      default: 10,
+      default: 99,
+    },
+
+    color: {
+      type: String,
+      validator(value) {
+        return COLORS.includes(value);
+      },
+    },
+  },
+
+  computed: {
+    buttonClass() {
+      return `counter__button--${this.color}`;
     },
   },
 
   methods: {
     countHandler(state) {
-      this.$emit("increase", state);
+      this.$emit("change", state);
     },
   },
 };
