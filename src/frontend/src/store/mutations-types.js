@@ -15,3 +15,6 @@ export const PUSH_ORDER = "PUSH_ORDER";
 export const PUSH_MISC = "PUSH_MISC";
 export const SET_MISC_COUNT = "SET_MISC_COUNT";
 export const SET_ORDER_COUNT = "SET_ORDER_COUNT";
+
+// Cart
+export const SET_RECEIVE = "SET_RECEIVE";

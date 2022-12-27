@@ -12,7 +12,7 @@ export default {
   },
 
   computed: {
-    countValue() {
+    $countValue() {
       let value = 0;
 
       if (this.selected.length) {

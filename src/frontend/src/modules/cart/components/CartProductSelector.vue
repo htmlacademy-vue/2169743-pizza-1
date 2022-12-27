@@ -12,7 +12,7 @@
         <h2>{{ order.name }}</h2>
         <ul>
           <li>
-            {{ order.size.diametr }}, на
+            {{ order.size.name }}, на
             {{ doughLabel }}
             тесте
           </li>
@@ -24,7 +24,7 @@
 
     <ItemCounter
       class="cart-list__counter"
-      :value="countValue"
+      :value="$countValue"
       color="orange"
       @change="changeCount"
     />

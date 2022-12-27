@@ -1,19 +1,31 @@
-import misc from "@/static/misc.json";
+import { SET_RECEIVE, CLEAR_STATE } from "@/store/mutations-types";
+
+const setupState = () => ({
+  receive: {
+    value: "customer",
+  },
+});
 
 export default {
   namespaced: true,
 
-  state: {
-    misc: misc,
-  },
+  state: setupState(),
 
   getters: {
-    misc(state) {
-      return state.misc;
+    receive(state) {
+      return state.receive;
     },
   },
 
   actions: {},
 
-  mutations: {},
+  mutations: {
+    [CLEAR_STATE](state) {
+      Object.assign(state, setupState());
+    },
+
+    [SET_RECEIVE](state, payload) {
+      state.receive = payload;
+    },
+  },
 };

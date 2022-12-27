@@ -10,24 +10,14 @@ import {
   SET_BUILDER_PRICE,
 } from "@/store/mutations-types";
 
+import pizza from "@/static/pizza.json";
+
 const setupState = () => ({
   builder: {
-    dough: {
-      name: "Тонкое",
-      type: "light",
-      value: "small",
-      price: 300,
-    },
+    dough: pizza.dough[0],
     ingredients: [],
-    sauce: {
-      name: "Томатный",
-      value: "tomato",
-      price: 50,
-    },
-    size: {
-      diametr: "23 см",
-      multi: 1,
-    },
+    sauce: pizza.sauces[0],
+    size: pizza.sizes[0],
     name: "",
     price: 0,
   },

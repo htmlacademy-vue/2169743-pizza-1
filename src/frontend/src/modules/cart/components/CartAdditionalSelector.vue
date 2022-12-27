@@ -13,7 +13,7 @@
     <div class="additional-list__wrapper">
       <ItemCounter
         class="additional-list__counter"
-        :value="countValue"
+        :value="$countValue"
         color="orange"
         @change="changeCount"
       />

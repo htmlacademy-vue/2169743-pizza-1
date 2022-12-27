@@ -8,7 +8,8 @@
         placeholder="Введите название пиццы"
         required
         autocomplete="off"
-        v-model="builder.name"
+        :value="builderName"
+        @input="handleInput($event)"
       />
     </label>
 
@@ -46,7 +47,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters("Builder", ["builder", "ingredientCount"]),
+    ...mapGetters("Builder", ["builder", "ingredientCount", "builderName"]),
   },
 
   methods: {
@@ -54,6 +55,10 @@ export default {
 
     selectDrop(data) {
       this.$emit("selectDrop", data);
+    },
+
+    handleInput(e) {
+      this.SET_BUILDER_NAME(e.target.value);
     },
   },
 };

@@ -31,7 +31,7 @@
                   v-for="size in pizza.sizes"
                   :key="size.id"
                   :label="size.name"
-                  :selected="builder.size.diametr"
+                  :selected="builder.size.name"
                   @input="selectSize"
                 />
               </div>
@@ -142,13 +142,13 @@ export default {
 
     selectSize(label) {
       const tempSize = {
-        diametr: label,
-        multi: null,
+        name: label,
+        multiplier: null,
       };
 
       this.pizza.sizes.forEach((size) => {
         if (label === size.name) {
-          tempSize.multi = size.multiplier;
+          tempSize.multiplier = size.multiplier;
         }
       });
 
@@ -218,10 +218,9 @@ export default {
 
     handleSubmit() {
       const tmpBuilder = { ...this.builder };
-      const id = this.generateId(this.builderList);
 
       if (!tmpBuilder.hasOwnProperty("id")) {
-        tmpBuilder.id = id;
+        tmpBuilder.id = this.$generateId(this.builderList);
       }
 
       if (!tmpBuilder.hasOwnProperty("count")) {

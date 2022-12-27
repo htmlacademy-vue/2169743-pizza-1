@@ -3,6 +3,7 @@ import Vuex from "vuex";
 import modules from "@/store/modules";
 
 import pizza from "@/static/pizza.json";
+import misc from "@/static/misc.json";
 
 Vue.use(Vuex);
 
@@ -14,11 +15,16 @@ export default new Vuex.Store({
       sauces: pizza.sauces,
       sizes: pizza.sizes,
     },
+    misc,
   },
 
   getters: {
     pizza(state) {
       return state.pizza;
+    },
+
+    misc(state) {
+      return state.misc;
     },
   },
 

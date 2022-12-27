@@ -47,7 +47,7 @@ export default {
     pizzaPrice() {
       const price =
         (this.dough.price + this.sauce.price + this.totalIngredientsPrice) *
-        this.size.multi;
+        this.size.multiplier;
 
       return price;
     },

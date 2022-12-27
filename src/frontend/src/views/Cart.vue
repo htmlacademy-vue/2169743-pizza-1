@@ -46,11 +46,15 @@
           <div class="cart-form">
             <label class="cart-form__select">
               <span class="cart-form__label">{{ form.select.label }}</span>
-
-              <select :name="form.select.name" class="select">
+              <select
+                class="select"
+                :name="form.select.name"
+                :value="receive.value"
+                @input="handleSelect($event)"
+              >
                 <option
-                  v-for="option in form.select.options"
-                  :key="option.value"
+                  v-for="(option, index) in selectOptions"
+                  :key="index"
                   :value="option.value"
                 >
                   {{ option.label }}
@@ -67,21 +71,11 @@
               />
             </label>
 
-            <div class="cart-form__address">
-              <span class="cart-form__label">{{ form.address.label }}</span>
-
-              <div
-                v-for="(field, index) in form.address.fields"
-                :key="index"
-                class="cart-form__input"
-                :class="fieldClass(field.class)"
-              >
-                <label class="input">
-                  <span>{{ field.label }}</span>
-                  <input :type="field.type" :name="field.name" />
-                </label>
-              </div>
-            </div>
+            <CartFormFieldAddress
+              v-if="receive.value !== 'customer'"
+              :label="form.address.label"
+              :fields="form.address.fields"
+            />
           </div>
         </div>
       </div>
@@ -111,10 +105,13 @@
 <script>
 import { mapGetters, mapMutations } from "vuex";
 
+import isAuth from "@/mixins/isAuth.js";
+
 import Popup from "@/common/components/Popup";
 
 import CartProductSelector from "@/modules/cart/components/CartProductSelector";
 import CartAdditionalSelector from "@/modules/cart/components/CartAdditionalSelector";
+import CartFormFieldAddress from "@/modules/cart/components/CartFormFieldAddress";
 
 export default {
   name: "Cart",
@@ -123,7 +120,10 @@ export default {
     Popup,
     CartProductSelector,
     CartAdditionalSelector,
+    CartFormFieldAddress,
   },
+
+  mixins: [isAuth],
 
   data() {
     return {
@@ -133,20 +133,6 @@ export default {
         select: {
           label: "Получение заказа:",
           name: "test",
-          options: [
-            {
-              value: "1",
-              label: "Заберу сам",
-            },
-            {
-              value: "2",
-              label: "Новый адрес",
-            },
-            {
-              value: "3",
-              label: "Дом",
-            },
-          ],
         },
         phone: {
           label: "Контактный телефон:",
@@ -181,8 +167,33 @@ export default {
   },
 
   computed: {
-    ...mapGetters("Cart", ["misc"]),
+    ...mapGetters(["misc"]),
+    ...mapGetters("Auth", ["address"]),
+    ...mapGetters("Cart", ["receive"]),
     ...mapGetters("Orders", ["builderList", "miscList", "orderPrice"]),
+
+    selectOptions() {
+      let options = [
+        {
+          value: "customer",
+          label: "Получу сам",
+        },
+        {
+          value: "new address",
+          label: "Новый адрес",
+        },
+      ];
+
+      if (this.$isAuth) {
+        options = options.concat(
+          this.user.address.map((el, index) =>
+            Object.assign(el, { value: index })
+          )
+        );
+      }
+
+      return options;
+    },
   },
 
   methods: {
@@ -191,17 +202,24 @@ export default {
       "SET_MISC_COUNT",
       "SET_ORDER_COUNT",
     ]),
+    ...mapMutations("Cart", ["SET_RECEIVE", "SET_RECEIVE_VALUE"]),
 
     handleSubmit() {
       this.isPopupOpen = true;
     },
 
-    closePopup() {
-      this.isPopupOpen = false;
+    handleSelect(e) {
+      let value = e.target.value;
+
+      if (Number.isInteger(+value)) {
+        this.SET_RECEIVE(this.address[+value]);
+      } else {
+        this.SET_RECEIVE({ value });
+      }
     },
 
-    fieldClass(modificator) {
-      return `cart-form__input--${modificator}`;
+    closePopup() {
+      this.isPopupOpen = false;
     },
 
     changeCountBuilder(currentBuilder) {
