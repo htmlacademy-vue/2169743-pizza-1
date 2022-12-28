@@ -50,8 +50,16 @@ export default {
   },
 
   computed: {
+    doughValue() {
+      return this.dough.name === "Тонкое" ? "small" : "big";
+    },
+
+    sauceValue() {
+      return this.sauce.name === "Томатный" ? "tomato" : "creamy";
+    },
+
     foundationClass() {
-      return `pizza--foundation--${this.dough.value}-${this.sauce.value}`;
+      return `pizza--foundation--${this.doughValue}-${this.sauceValue}`;
     },
   },
 

@@ -1,7 +1,7 @@
 <template>
   <div class="page">
     <main class="content">
-      <form action="#" method="post">
+      <form action="#" method="post" @submit.prevent="handleSubmit">
         <div class="content__wrapper">
           <h1 class="title title--big">Конструктор пиццы</h1>
 
@@ -11,11 +11,11 @@
 
               <div class="sheet__content dough">
                 <BuilderDoughSelector
-                  v-for="dough in doughes"
+                  v-for="dough in pizza.doughes"
                   :key="dough.id"
                   :label="dough.name"
                   :description="dough.description"
-                  :selected="pizzaBuilder.dough.name"
+                  :selected="builder.dough.name"
                   @input="selectDough"
                 />
               </div>
@@ -28,10 +28,10 @@
 
               <div class="sheet__content diameter">
                 <BuilderSizeSelector
-                  v-for="size in sizes"
+                  v-for="size in pizza.sizes"
                   :key="size.id"
                   :label="size.name"
-                  :selected="pizzaBuilder.size.diametr"
+                  :selected="builder.size.name"
                   @input="selectSize"
                 />
               </div>
@@ -46,8 +46,8 @@
 
               <div class="sheet__content ingredients">
                 <BuilderSauceSelector
-                  :items="sauces"
-                  :selected="pizzaBuilder.sauce.name"
+                  :items="pizza.sauces"
+                  :selected="builder.sauce.name"
                   @select="selectSauce"
                 >
                   <p>Основной соус:</p>
@@ -58,12 +58,12 @@
 
                   <ul class="ingredients__list">
                     <BuilderIngredientsSelector
-                      v-for="ingredient in ingredients"
+                      v-for="ingredient in pizza.ingredients"
                       :key="ingredient.id"
                       class="ingredients__item"
                       tag="li"
                       :label="ingredient.name"
-                      :selected="pizzaBuilder.ingredients"
+                      :selected="builder.ingredients"
                       :draggable="true"
                       @change="selectIngredients"
                     />
@@ -73,14 +73,7 @@
             </div>
           </div>
 
-          <SelectorItem
-            :dough="pizzaBuilder.dough"
-            :sauce="pizzaBuilder.sauce"
-            :size="pizzaBuilder.size"
-            :ingredients="pizzaBuilder.ingredients"
-            class="content__pizza"
-            @selectDrop="dropHandler"
-          />
+          <SelectorItem class="content__pizza" @selectDrop="handleDrop" />
         </div>
       </form>
     </main>
@@ -88,9 +81,7 @@
 </template>
 
 <script>
-import misc from "@/static/misc.json";
-import pizza from "@/static/pizza.json";
-import user from "@/static/user.json";
+import { mapGetters, mapMutations } from "vuex";
 
 import SelectorItem from "@/common/components/SelectorItem";
 
@@ -98,6 +89,8 @@ import BuilderDoughSelector from "@/modules/builder/components/BuilderDoughSelec
 import BuilderSauceSelector from "@/modules/builder/components/BuilderSauceSelector";
 import BuilderSizeSelector from "@/modules/builder/components/BuilderSizeSelector";
 import BuilderIngredientsSelector from "@/modules/builder/components/BuilderIngredientsSelector";
+
+import generateId from "@/mixins/generateId.js";
 
 export default {
   name: "IndexHome",
@@ -110,103 +103,99 @@ export default {
     BuilderIngredientsSelector,
   },
 
-  data() {
-    return {
-      misc,
-      user,
-      doughes: pizza.dough,
-      ingredients: pizza.ingredients,
-      sauces: pizza.sauces,
-      sizes: pizza.sizes,
+  mixins: [generateId],
 
-      pizzaBuilder: {
-        dough: {
-          name: "Тонкое",
-          type: "light",
-          value: "small",
-          price: 300,
-        },
-        sauce: {
-          name: "Томатный",
-          value: "tomato",
-          price: 50,
-        },
-        size: {
-          diametr: "23 см",
-          multi: 1,
-        },
-        ingredients: [],
-      },
-    };
+  computed: {
+    ...mapGetters(["pizza"]),
+    ...mapGetters("Builder", ["builder"]),
+    ...mapGetters("Orders", ["builderList"]),
   },
 
   methods: {
-    selectDough(dough) {
-      this.pizzaBuilder.dough.name = dough.name;
-      this.pizzaBuilder.dough.type = dough.type;
-      this.pizzaBuilder.dough.value = dough.value;
+    ...mapMutations("Builder", [
+      "CLEAR_STATE",
+      "SET_BUILDER",
+      "SET_DOUGH",
+      "SET_SIZE",
+      "SET_SAUCE",
+      "SET_INGREDIENTS",
+      "SET_INGREDIENT_COUNT",
+    ]),
+    ...mapMutations("Orders", ["PUSH_ORDER"]),
 
-      this.doughes.forEach((el) => {
+    selectDough(dough) {
+      const tempDough = {
+        name: dough.name,
+        type: dough.type,
+        value: dough.value,
+        price: null,
+      };
+
+      this.pizza.doughes.forEach((el) => {
         if (el.name === dough.name) {
-          this.pizzaBuilder.dough.price = el.price;
+          tempDough.price = el.price;
         }
       });
+
+      this.SET_DOUGH(tempDough);
     },
 
     selectSize(label) {
-      this.pizzaBuilder.size.diametr = label;
+      const tempSize = {
+        name: label,
+        multiplier: null,
+      };
 
-      this.sizes.forEach((size) => {
+      this.pizza.sizes.forEach((size) => {
         if (label === size.name) {
-          this.pizzaBuilder.size.multi = size.multiplier;
+          tempSize.multiplier = size.multiplier;
         }
       });
+
+      this.SET_SIZE(tempSize);
     },
 
     selectSauce(sauce) {
-      this.pizzaBuilder.sauce.name = sauce.name;
-      this.pizzaBuilder.sauce.value = sauce.value;
+      const tempSauce = {
+        name: sauce.name,
+        value: sauce.value,
+        price: null,
+      };
 
-      this.sauces.forEach((el) => {
+      this.pizza.sauces.forEach((el) => {
         if (el.name === sauce.name) {
-          this.pizzaBuilder.sauce.price = el.price;
+          tempSauce.price = el.price;
         }
       });
+
+      this.SET_SAUCE(tempSauce);
     },
 
-    selectIngredients(obj) {
-      const currentFill = { ...obj };
-
-      this.ingredients.forEach((el) => {
+    selectIngredients(currentFill) {
+      this.pizza.ingredients.forEach((el) => {
         if (el.name === currentFill.name) {
           currentFill.price = el.price;
         }
       });
 
-      if (this.pizzaBuilder.ingredients.length) {
-        const isMatch = this.pizzaBuilder.ingredients.some(
+      const { ingredients } = this.builder;
+
+      if (ingredients.length) {
+        const isMatch = ingredients.some(
           (fill) => fill.name === currentFill.name
         );
 
         if (isMatch) {
-          const index = this.pizzaBuilder.ingredients.findIndex(
+          const index = ingredients.findIndex(
             (fill) => fill.name === currentFill.name
           );
 
-          this.pizzaBuilder.ingredients[index].countState =
-            currentFill.countState;
+          ingredients[index].countState = currentFill.countState;
 
           const hasState = currentFill.hasOwnProperty("countState");
-          const isDecrease =
-            this.pizzaBuilder.ingredients[index].countState === "decrease";
+          const isDecrease = ingredients[index].countState === "decrease";
 
-          if (hasState && isDecrease) {
-            this.pizzaBuilder.ingredients[index].count -= 1;
-          } else {
-            if (this.pizzaBuilder.ingredients[index].count < 3) {
-              this.pizzaBuilder.ingredients[index].count += 1;
-            }
-          }
+          this.SET_INGREDIENT_COUNT({ index, hasState, isDecrease });
         } else {
           this.addIngredient(currentFill);
         }
@@ -220,11 +209,29 @@ export default {
         ingredient.count = 1;
       }
 
-      this.pizzaBuilder.ingredients.push(ingredient);
+      this.SET_INGREDIENTS(ingredient);
     },
 
-    dropHandler(data) {
+    handleDrop(data) {
       this.selectIngredients(JSON.parse(data));
+    },
+
+    handleSubmit() {
+      const tmpBuilder = { ...this.builder };
+
+      if (!tmpBuilder.hasOwnProperty("id")) {
+        tmpBuilder.id = this.$generateId(this.builderList);
+      }
+
+      if (!tmpBuilder.hasOwnProperty("count")) {
+        tmpBuilder.count = 1;
+      }
+
+      this.PUSH_ORDER({
+        ...tmpBuilder,
+      });
+      this.CLEAR_STATE();
+      this.$router.push("/cart");
     },
   },
 };

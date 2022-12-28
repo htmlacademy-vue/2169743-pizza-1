@@ -11,10 +11,10 @@
     </span>
 
     <ItemCounter
-      :value="countValue"
       class="ingredients__counter"
+      :value="countValue"
       :max="3"
-      @increase="changeCount"
+      @change="changeCount"
     />
   </component>
 </template>
@@ -114,9 +114,9 @@ export default {
       let value = 0;
 
       if (this.selected.length) {
-        this.selected.forEach((filling) => {
-          if (filling.name === this.label) {
-            value = filling.count;
+        this.selected.forEach((item) => {
+          if (item.name === this.label) {
+            value = item.count;
           }
         });
       }
