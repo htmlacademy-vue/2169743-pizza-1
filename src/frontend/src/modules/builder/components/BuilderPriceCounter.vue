@@ -10,8 +10,12 @@
 <script>
 import { mapGetters, mapMutations } from "vuex";
 
+import calcPrice from "@/common/mixins/calcPrice.js";
+
 export default {
   name: "BuilderPriceCounter",
+
+  mixins: [calcPrice],
 
   props: {
     dough: {
@@ -38,18 +42,13 @@ export default {
   computed: {
     ...mapGetters("Builder", ["ingredientCount", "builderName"]),
 
-    totalIngredientsPrice() {
-      return this.ingredients.reduce((total, ingredient) => {
-        return total + ingredient.price * ingredient.count;
-      }, 0);
-    },
-
     pizzaPrice() {
-      const price =
-        (this.dough.price + this.sauce.price + this.totalIngredientsPrice) *
-        this.size.multiplier;
-
-      return price;
+      return this.$calcPizzaPrice({
+        dough: this.dough,
+        sauce: this.sauce,
+        size: this.size,
+        ingredients: this.ingredients,
+      });
     },
 
     disableButton() {

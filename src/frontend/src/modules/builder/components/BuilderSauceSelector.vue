@@ -16,14 +16,13 @@
 </template>
 
 <script>
-import RadioButton from "@/common/components/RadioButton";
+const cream = {
+  creamy: "Сливочный",
+  tomato: "Томатный",
+};
 
 export default {
   name: "BuilderSauceSelector",
-
-  components: {
-    RadioButton,
-  },
 
   props: {
     items: {
@@ -41,13 +40,10 @@ export default {
     sauceValue(label) {
       let value = "";
 
-      switch (label) {
-        case "Сливочный":
-          value = "creamy";
-          break;
-        default:
-          value = "tomato";
-          break;
+      for (const key in cream) {
+        if (label === cream[key]) {
+          value = key;
+        }
       }
 
       return value;

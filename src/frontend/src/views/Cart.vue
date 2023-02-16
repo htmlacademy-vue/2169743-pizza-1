@@ -1,10 +1,5 @@
 <template>
-  <form
-    action="test.html"
-    method="post"
-    class="layout-form"
-    @submit.prevent="handleSubmit"
-  >
+  <form class="layout-form" @submit.prevent="handleSubmit">
     <main class="content cart">
       <div class="container">
         <div class="cart__title">
@@ -57,25 +52,54 @@
                   :key="index"
                   :value="option.value"
                 >
-                  {{ option.label }}
+                  {{ option.name }}
                 </option>
               </select>
             </label>
 
-            <label class="input input--big-label">
-              <span>{{ form.phone.label }}</span>
-              <input
-                :type="form.phone.type"
-                :name="form.phone.name"
-                :placeholder="form.phone.placeholder"
-              />
-            </label>
-
-            <CartFormFieldAddress
-              v-if="receive.value !== 'customer'"
-              :label="form.address.label"
-              :fields="form.address.fields"
+            <AppInput
+              class="input--big-label"
+              :label="form.phone.label"
+              :type="form.phone.type"
+              :name="form.phone.name"
+              :placeholder="form.phone.placeholder"
+              v-model.trim="form.phone.value"
             />
+
+            <div class="cart-form__address" v-if="receive.value !== 'customer'">
+              <span class="cart-form__label" v-if="form.address.label">
+                {{ form.address.label }}
+              </span>
+              <div class="cart-form__input">
+                <AppInput
+                  :label="form.address.field.street.label"
+                  :type="form.address.field.street.type"
+                  :name="form.address.field.street.name"
+                  v-model.trim="form.address.field.street.value"
+                  :disabled="!isNewAddress"
+                  required
+                />
+              </div>
+              <div class="cart-form__input cart-form__input--small">
+                <AppInput
+                  :label="form.address.field.building.label"
+                  :type="form.address.field.building.type"
+                  :name="form.address.field.building.name"
+                  v-model.trim="form.address.field.building.value"
+                  :disabled="!isNewAddress"
+                  required
+                />
+              </div>
+              <div class="cart-form__input cart-form__input--small">
+                <AppInput
+                  :label="form.address.field.flat.label"
+                  :type="form.address.field.flat.type"
+                  :name="form.address.field.flat.name"
+                  v-model.trim="form.address.field.flat.value"
+                  :disabled="!isNewAddress"
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -103,27 +127,33 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from "vuex";
-
-import isAuth from "@/mixins/isAuth.js";
-
-import Popup from "@/common/components/Popup";
+import { mapState, mapGetters, mapMutations, mapActions } from "vuex";
 
 import CartProductSelector from "@/modules/cart/components/CartProductSelector";
 import CartAdditionalSelector from "@/modules/cart/components/CartAdditionalSelector";
-import CartFormFieldAddress from "@/modules/cart/components/CartFormFieldAddress";
+
+import validator from "@/common/mixins/validator";
+
+let SETUP_OPTIONS = [
+  {
+    value: "customer",
+    name: "Получу сам",
+  },
+  {
+    value: "new address",
+    name: "Новый адрес",
+  },
+];
 
 export default {
   name: "Cart",
 
   components: {
-    Popup,
     CartProductSelector,
     CartAdditionalSelector,
-    CartFormFieldAddress,
   },
 
-  mixins: [isAuth],
+  mixins: [validator],
 
   data() {
     return {
@@ -139,72 +169,155 @@ export default {
           type: "text",
           name: "tel",
           placeholder: "+7 999-999-99-99",
+          value: "",
         },
         address: {
           label: "Новый адрес:",
-          fields: [
-            {
+          field: {
+            street: {
               label: "Улица*",
               type: "text",
               name: "street",
+              value: "",
             },
-            {
+            building: {
               class: "small",
               label: "Дом*",
               type: "text",
-              name: "house",
+              name: "building",
+              value: "",
             },
-            {
+            flat: {
               class: "small",
               label: "Квартира",
               type: "text",
-              name: "apartment",
+              name: "flat",
+              value: "",
             },
-          ],
+          },
+        },
+      },
+      validations: {
+        building: {
+          error: "",
+          rules: ["number"],
+        },
+        flat: {
+          error: "",
+          rules: ["number"],
         },
       },
     };
   },
 
   computed: {
+    ...mapState("Auth", ["isAuthenticated"]),
     ...mapGetters(["misc"]),
-    ...mapGetters("Auth", ["address"]),
-    ...mapGetters("Cart", ["receive"]),
-    ...mapGetters("Orders", ["builderList", "miscList", "orderPrice"]),
+    ...mapGetters("Auth", ["getUserAttribute", "addresses"]),
+    ...mapGetters("Cart", ["receive", "builderList", "miscList", "orderPrice"]),
 
     selectOptions() {
-      let options = [
-        {
-          value: "customer",
-          label: "Получу сам",
-        },
-        {
-          value: "new address",
-          label: "Новый адрес",
-        },
-      ];
+      let options = [...SETUP_OPTIONS];
 
-      if (this.$isAuth) {
+      if (this.isAuthenticated) {
         options = options.concat(
-          this.user.address.map((el, index) =>
-            Object.assign(el, { value: index })
+          this.addresses.map((address) =>
+            Object.assign(address, { value: address.id })
           )
         );
       }
 
       return options;
     },
+
+    isNewAddress() {
+      return this.receive.value === "new address";
+    },
+
+    isCustomerGet() {
+      return this.receive.value === "customer";
+    },
+
+    userId() {
+      return this.isAuthenticated ? this.getUserAttribute("id") : null;
+    },
+
+    addressData() {
+      if (this.isNewAddress) {
+        const { street, building, flat } = this.form.address.field;
+
+        return {
+          street: street.value,
+          building: building.value,
+          flat: flat.value,
+          comment: "",
+        };
+      } else if (!this.isCustomerGet) {
+        return { id: this.receive.id };
+      }
+
+      return null;
+    },
+  },
+
+  mounted() {
+    if (this.isAuthenticated) {
+      this.form.phone.value = this.getUserAttribute("phone");
+      this.setAddress();
+    }
   },
 
   methods: {
-    ...mapMutations("Orders", [
+    ...mapMutations("Cart", [
+      "SET_RECEIVE",
+      "SET_RECEIVE_VALUE",
       "PUSH_MISC",
       "SET_MISC_COUNT",
       "SET_ORDER_COUNT",
     ]),
-    ...mapMutations("Cart", ["SET_RECEIVE", "SET_RECEIVE_VALUE"]),
+    ...mapActions("Orders", ["createOrder"]),
+
+    setAddress() {
+      const { flat, building, street } = this.receive;
+
+      if (flat && building && street) {
+        for (const key in this.form.address.field) {
+          if (this.receive.hasOwnProperty(key)) {
+            this.form.address.field[key].value = this.receive[key];
+          }
+        }
+      } else {
+        for (const key in this.form.address.field) {
+          this.form.address.field[key].value = "";
+        }
+      }
+    },
 
     handleSubmit() {
+      const { building, flat } = this.form.address.field;
+
+      if (this.isAuthenticated) {
+        if (
+          !this.$validateFields(
+            { building: building.value, flat: flat.value },
+            this.validations
+          )
+        ) {
+          this.$showErrors();
+
+          return;
+        }
+
+        const order = {};
+        order.userId = this.userId;
+        order.phone = this.form.phone.value;
+        order.address = this.addressData;
+        order.pizzas = this.pizzaData(this.builderList);
+        order.misc = this.miscData(this.miscList);
+
+        this.createOrder(order);
+      }
+
       this.isPopupOpen = true;
     },
 
@@ -212,14 +325,29 @@ export default {
       let value = e.target.value;
 
       if (Number.isInteger(+value)) {
-        this.SET_RECEIVE(this.address[+value]);
+        const selectAddress = this.addresses.find(
+          (address) => address.id === +value
+        );
+
+        this.SET_RECEIVE(selectAddress);
       } else {
         this.SET_RECEIVE({ value });
       }
+
+      this.setAddress();
     },
 
     closePopup() {
       this.isPopupOpen = false;
+
+      this.$store.commit("Builder/CLEAR_STATE");
+      this.$store.commit("Cart/CLEAR_STATE");
+
+      if (this.isAuthenticated) {
+        this.$router.push("/orders");
+      } else {
+        this.$router.push("/");
+      }
     },
 
     changeCountBuilder(currentBuilder) {
@@ -270,13 +398,41 @@ export default {
 
     addMisc(misc) {
       if (!misc.hasOwnProperty("count")) {
-        misc.count = 1;
+        misc.quantity = 1;
       }
 
       this.PUSH_MISC(misc);
     },
+
+    pizzaData(pizzas) {
+      return pizzas.map((pizza) => {
+        const { name, dough, sauce, size, quantity, ingredients } = pizza;
+
+        return {
+          name,
+          sauceId: sauce.id,
+          doughId: dough.id,
+          sizeId: size.id,
+          quantity,
+          ingredients: this.ingredientData(ingredients),
+        };
+      });
+    },
+
+    ingredientData(ingredients) {
+      return ingredients.map((ingredient) => {
+        return {
+          ingredientId: ingredient.id,
+          quantity: ingredient.quantity,
+        };
+      });
+    },
+
+    miscData(miscs) {
+      return miscs.map((misc) => {
+        return { miscId: misc.id, quantity: misc.quantity };
+      });
+    },
   },
 };
 </script>
-
-<style lang="scss" scoped></style>

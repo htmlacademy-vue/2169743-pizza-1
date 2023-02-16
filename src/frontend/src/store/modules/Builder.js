@@ -10,85 +10,89 @@ import {
   SET_BUILDER_PRICE,
 } from "@/store/mutations-types";
 
-import pizza from "@/static/pizza.json";
-
 const setupState = () => ({
   builder: {
-    dough: pizza.dough[0],
+    dough: null,
     ingredients: [],
-    sauce: pizza.sauces[0],
-    size: pizza.sizes[0],
+    sauce: null,
+    size: null,
     name: "",
     price: 0,
   },
 });
 
+const state = () => setupState();
+
+const getters = {
+  builder(state, getters, rootState) {
+    return {
+      ...state.builder,
+      dough: state.builder.dough ?? rootState.dough[0],
+      sauce: state.builder.sauce ?? rootState.sauces[0],
+      size: state.builder.size ?? rootState.sizes[0],
+    };
+  },
+
+  ingredientCount(state) {
+    return state.builder.ingredients.some((el) => el.quantity > 0);
+  },
+
+  builderName(state, getters) {
+    return getters.builder.name || "";
+  },
+};
+
+const mutations = {
+  [CLEAR_STATE](state) {
+    Object.assign(state, setupState());
+  },
+
+  [SET_BUILDER](state, payload) {
+    state.builder = payload;
+  },
+
+  [SET_DOUGH](state, payload) {
+    state.builder.dough = payload;
+  },
+
+  [SET_INGREDIENTS](state, payload) {
+    state.builder.ingredients = [...state.builder.ingredients, payload];
+  },
+
+  [SET_INGREDIENT_COUNT](state, { index, hasState, isDecrease }) {
+    if (hasState && isDecrease) {
+      state.builder.ingredients[index].quantity -= 1;
+
+      if (state.builder.ingredients[index].quantity === 0) {
+        state.builder.ingredients.splice(index, 1);
+      }
+    } else {
+      if (state.builder.ingredients[index].quantity < 3) {
+        state.builder.ingredients[index].quantity += 1;
+      }
+    }
+  },
+
+  [SET_SAUCE](state, payload) {
+    state.builder.sauce = payload;
+  },
+
+  [SET_SIZE](state, payload) {
+    state.builder.size = payload;
+  },
+
+  [SET_BUILDER_NAME](state, payload) {
+    state.builder.name = payload;
+  },
+
+  [SET_BUILDER_PRICE](state, payload) {
+    state.builder.price = payload;
+  },
+};
+
 export default {
   namespaced: true,
-
-  state: setupState(),
-
-  getters: {
-    builder(state) {
-      return state.builder;
-    },
-
-    ingredientCount(state) {
-      return state.builder.ingredients.some((el) => el.count > 0);
-    },
-
-    builderName(state) {
-      return state.builder.name || "";
-    },
-  },
-
-  actions: {},
-
-  mutations: {
-    [CLEAR_STATE](state) {
-      Object.assign(state, setupState());
-    },
-
-    [SET_BUILDER](state, payload) {
-      state.builder = payload;
-    },
-
-    [SET_DOUGH](state, payload) {
-      state.builder.dough = payload;
-    },
-
-    [SET_INGREDIENTS](state, payload) {
-      state.builder.ingredients = [...state.builder.ingredients, payload];
-    },
-
-    [SET_INGREDIENT_COUNT](state, { index, hasState, isDecrease }) {
-      if (hasState && isDecrease) {
-        state.builder.ingredients[index].count -= 1;
-
-        if (state.builder.ingredients[index].count === 0) {
-          state.builder.ingredients.splice(index, 1);
-        }
-      } else {
-        if (state.builder.ingredients[index].count < 3) {
-          state.builder.ingredients[index].count += 1;
-        }
-      }
-    },
-
-    [SET_SAUCE](state, payload) {
-      state.builder.sauce = payload;
-    },
-
-    [SET_SIZE](state, payload) {
-      state.builder.size = payload;
-    },
-
-    [SET_BUILDER_NAME](state, payload) {
-      state.builder.name = payload;
-    },
-
-    [SET_BUILDER_PRICE](state, payload) {
-      state.builder.price = payload;
-    },
-  },
+  state,
+  getters,
+  mutations,
 };

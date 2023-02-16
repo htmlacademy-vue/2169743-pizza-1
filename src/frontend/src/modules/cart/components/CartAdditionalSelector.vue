@@ -26,16 +26,10 @@
 </template>
 
 <script>
-import ItemCounter from "@/common/components/ItemCounter";
-
-import productCount from "@/mixins/productCount.js";
+import productCount from "@/common/mixins/productCount.js";
 
 export default {
   name: "CartAdditionalSelector",
-
-  components: {
-    ItemCounter,
-  },
 
   mixins: [productCount],
 
