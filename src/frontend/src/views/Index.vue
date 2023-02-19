@@ -83,20 +83,17 @@
 <script>
 import { mapGetters, mapMutations } from "vuex";
 
-import SelectorItem from "@/common/components/SelectorItem";
-
 import BuilderDoughSelector from "@/modules/builder/components/BuilderDoughSelector";
 import BuilderSauceSelector from "@/modules/builder/components/BuilderSauceSelector";
 import BuilderSizeSelector from "@/modules/builder/components/BuilderSizeSelector";
 import BuilderIngredientsSelector from "@/modules/builder/components/BuilderIngredientsSelector";
 
-import generateId from "@/mixins/generateId.js";
+import generateId from "@/common/mixins/generateId.js";
 
 export default {
   name: "IndexHome",
 
   components: {
-    SelectorItem,
     BuilderDoughSelector,
     BuilderSauceSelector,
     BuilderSizeSelector,
@@ -108,7 +105,7 @@ export default {
   computed: {
     ...mapGetters(["pizza"]),
     ...mapGetters("Builder", ["builder"]),
-    ...mapGetters("Orders", ["builderList"]),
+    ...mapGetters("Cart", ["builderList"]),
   },
 
   methods: {
@@ -121,10 +118,11 @@ export default {
       "SET_INGREDIENTS",
       "SET_INGREDIENT_COUNT",
     ]),
-    ...mapMutations("Orders", ["PUSH_ORDER"]),
+    ...mapMutations("Cart", ["PUSH_ORDER"]),
 
     selectDough(dough) {
       const tempDough = {
+        id: null,
         name: dough.name,
         type: dough.type,
         value: dough.value,
@@ -133,6 +131,7 @@ export default {
 
       this.pizza.doughes.forEach((el) => {
         if (el.name === dough.name) {
+          tempDough.id = el.id;
           tempDough.price = el.price;
         }
       });
@@ -142,12 +141,14 @@ export default {
 
     selectSize(label) {
       const tempSize = {
+        id: null,
         name: label,
         multiplier: null,
       };
 
       this.pizza.sizes.forEach((size) => {
         if (label === size.name) {
+          tempSize.id = size.id;
           tempSize.multiplier = size.multiplier;
         }
       });
@@ -157,6 +158,7 @@ export default {
 
     selectSauce(sauce) {
       const tempSauce = {
+        id: null,
         name: sauce.name,
         value: sauce.value,
         price: null,
@@ -164,6 +166,7 @@ export default {
 
       this.pizza.sauces.forEach((el) => {
         if (el.name === sauce.name) {
+          tempSauce.id = el.id;
           tempSauce.price = el.price;
         }
       });
@@ -174,6 +177,7 @@ export default {
     selectIngredients(currentFill) {
       this.pizza.ingredients.forEach((el) => {
         if (el.name === currentFill.name) {
+          currentFill.id = el.id;
           currentFill.price = el.price;
         }
       });
@@ -206,7 +210,7 @@ export default {
 
     addIngredient(ingredient) {
       if (!ingredient.hasOwnProperty("count")) {
-        ingredient.count = 1;
+        ingredient.quantity = 1;
       }
 
       this.SET_INGREDIENTS(ingredient);
@@ -224,7 +228,7 @@ export default {
       }
 
       if (!tmpBuilder.hasOwnProperty("count")) {
-        tmpBuilder.count = 1;
+        tmpBuilder.quantity = 1;
       }
 
       this.PUSH_ORDER({

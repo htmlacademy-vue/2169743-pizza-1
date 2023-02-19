@@ -9,7 +9,7 @@
       <template v-if="ingredients.length">
         <template v-for="filling in ingredients">
           <div
-            v-for="time in filling.count"
+            v-for="time in filling.quantity"
             :key="`${filling.value} - ${time}`"
             :class="fillingClass(filling.value, time)"
             class="pizza__filling"
@@ -51,11 +51,11 @@ export default {
 
   computed: {
     doughValue() {
-      return this.dough.name === "Тонкое" ? "small" : "big";
+      return this.dough?.name === "Тонкое" ? "small" : "big";
     },
 
     sauceValue() {
-      return this.sauce.name === "Томатный" ? "tomato" : "creamy";
+      return this.sauce?.name === "Томатный" ? "tomato" : "creamy";
     },
 
     foundationClass() {

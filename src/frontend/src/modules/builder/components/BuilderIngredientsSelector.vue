@@ -20,14 +20,26 @@
 </template>
 
 <script>
-import ItemCounter from "@/common/components/ItemCounter";
+const ingredient = {
+  ananas: "Ананас",
+  bacon: "Бекон",
+  blue_cheese: "Блю чиз",
+  cheddar: "Чеддер",
+  chile: "Чили",
+  ham: "Ветчина",
+  jalapeno: "Халапеньо",
+  mozzarella: "Моцарелла",
+  mushrooms: "Грибы",
+  olives: "Маслины",
+  onion: "Лук",
+  parmesan: "Пармезан",
+  salami: "Салями",
+  salmon: "Лосось",
+  tomatoes: "Томаты",
+};
 
 export default {
   name: "BuilderIngredientsSelector",
-
-  components: {
-    ItemCounter,
-  },
 
   props: {
     tag: {
@@ -55,52 +67,10 @@ export default {
     ingredientValue() {
       let value = "";
 
-      switch (this.label) {
-        case "Ананас":
-          value = "ananas";
-          break;
-        case "Бекон":
-          value = "bacon";
-          break;
-        case "Блю чиз":
-          value = "blue_cheese";
-          break;
-        case "Чеддер":
-          value = "cheddar";
-          break;
-        case "Чили":
-          value = "chile";
-          break;
-        case "Ветчина":
-          value = "ham";
-          break;
-        case "Халапеньо":
-          value = "jalapeno";
-          break;
-        case "Моцарелла":
-          value = "mozzarella";
-          break;
-        case "Грибы":
-          value = "mushrooms";
-          break;
-        case "Маслины":
-          value = "olives";
-          break;
-        case "Лук":
-          value = "onion";
-          break;
-        case "Пармезан":
-          value = "parmesan";
-          break;
-        case "Салями":
-          value = "salami";
-          break;
-        case "Лосось":
-          value = "salmon";
-          break;
-        default:
-          value = "tomatoes";
-          break;
+      for (const key in ingredient) {
+        if (this.label === ingredient[key]) {
+          value = key;
+        }
       }
 
       return value;
@@ -116,7 +86,7 @@ export default {
       if (this.selected.length) {
         this.selected.forEach((item) => {
           if (item.name === this.label) {
-            value = item.count;
+            value = item.quantity;
           }
         });
       }

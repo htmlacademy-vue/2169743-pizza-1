@@ -6,19 +6,29 @@
     <div class="sign-form__title">
       <h1 class="title title--small">Авторизуйтесь на сайте</h1>
     </div>
-    <form action="test.html" method="post">
+    <form @submit.prevent="handleSubmit">
       <div class="sign-form__input">
-        <label class="input">
-          <span>E-mail</span>
-          <input type="email" name="email" placeholder="example@mail.ru" />
-        </label>
+        <AppInput
+          ref="email"
+          tag="label"
+          v-model="email"
+          label="E-mail"
+          type="email"
+          name="email"
+          placeholder="example@mail.ru"
+        />
       </div>
 
       <div class="sign-form__input">
-        <label class="input">
-          <span>Пароль</span>
-          <input type="password" name="pass" placeholder="***********" />
-        </label>
+        <AppInput
+          ref="password"
+          tag="label"
+          v-model="password"
+          label="Пароль"
+          type="password"
+          name="pass"
+          placeholder="***********"
+        />
       </div>
       <button type="submit" class="button">Авторизоваться</button>
     </form>
@@ -26,9 +36,58 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
+
+import validator from "@/common/mixins/validator";
+
 export default {
   name: "Login",
+
+  mixins: [validator],
+
+  data() {
+    return {
+      email: "",
+      password: "",
+      validations: {
+        email: {
+          error: "",
+          rules: ["required", "email"],
+        },
+        password: {
+          error: "",
+          rules: ["required"],
+        },
+      },
+    };
+  },
+
+  mounted() {
+    this.$refs.email?.$refs.input.focus();
+  },
+
+  methods: {
+    ...mapActions("Auth", ["login"]),
+
+    async handleSubmit() {
+      if (
+        !this.$validateFields(
+          { email: this.email, password: this.password },
+          this.validations
+        )
+      ) {
+        this.$showErrors();
+
+        return;
+      }
+
+      await this.login({
+        email: this.email,
+        password: this.password,
+      });
+
+      await this.$router.push("/");
+    },
+  },
 };
 </script>
-
-<style lang="scss" scoped></style>

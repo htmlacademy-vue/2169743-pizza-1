@@ -13,6 +13,7 @@
       <router-link to="/orders" class="layout__link">
         История заказов
       </router-link>
+
       <router-link to="/profile" class="layout__link layout__link--active">
         Мои данные
       </router-link>
@@ -25,121 +26,53 @@
 
       <div class="user">
         <picture>
-          <source
-            type="image/webp"
-            srcset="
-              @/assets/img/users/user5@2x.webp 1x,
-              @/assets/img/users/user5@4x.webp 2x
-            "
-          />
+          <source type="image/webp" :srcset="$userAvatar([2, 4], true, true)" />
           <img
-            src="@/assets/img/users/user5@2x.jpg"
-            srcset="@/assets/img/users/user5@4x.jpg"
-            alt="Василий Ложкин"
+            :src="$userAvatar([2])"
+            :srcset="$userAvatar([4])"
+            :alt="getUserAttribute('name')"
             width="72"
             height="72"
           />
         </picture>
         <div class="user__name">
-          <span>Василий Ложкин</span>
+          <span>{{ getUserAttribute("name") }}</span>
         </div>
         <p class="user__phone">
-          Контактный телефон: <span>+7 999-999-99-99</span>
+          Контактный телефон: <span>{{ getUserAttribute("phone") }}</span>
         </p>
       </div>
 
-      <div class="layout__address">
-        <div class="sheet address-form">
-          <div class="address-form__header">
-            <b>Адрес №1. Тест</b>
-            <div class="address-form__edit">
-              <button type="button" class="icon">
-                <span class="visually-hidden">Изменить адрес</span>
-              </button>
-            </div>
-          </div>
-          <p>Невский пр., д. 22, кв. 46</p>
-          <small>Позвоните, пожалуйста, от проходной</small>
+      <template v-if="addresses.length || isAdding">
+        <template v-if="addresses.length">
+          <ProfileAddress
+            v-for="address in addresses"
+            :key="address.id"
+            :address="address"
+            @update="updateHandler"
+            @remove="removeHandler"
+          />
+        </template>
+
+        <div class="layout__address" v-if="isAdding">
+          <ProfileAddressEdit
+            :index="newAddressIndex"
+            @saveData="createHandler"
+            @remove="hideEditCard"
+          />
         </div>
-      </div>
-
-      <div class="layout__address">
-        <form
-          action="test.html"
-          method="post"
-          class="address-form address-form--opened sheet"
-        >
-          <div class="address-form__header">
-            <b>Адрес №1</b>
-          </div>
-
-          <div class="address-form__wrapper">
-            <div class="address-form__input">
-              <label class="input">
-                <span>Название адреса*</span>
-                <input
-                  type="text"
-                  name="addr-name"
-                  placeholder="Введите название адреса"
-                  required
-                />
-              </label>
-            </div>
-            <div class="address-form__input address-form__input--size--normal">
-              <label class="input">
-                <span>Улица*</span>
-                <input
-                  type="text"
-                  name="addr-street"
-                  placeholder="Введите название улицы"
-                  required
-                />
-              </label>
-            </div>
-            <div class="address-form__input address-form__input--size--small">
-              <label class="input">
-                <span>Дом*</span>
-                <input
-                  type="text"
-                  name="addr-house"
-                  placeholder="Введите номер дома"
-                  required
-                />
-              </label>
-            </div>
-            <div class="address-form__input address-form__input--size--small">
-              <label class="input">
-                <span>Квартира</span>
-                <input
-                  type="text"
-                  name="addr-apartment"
-                  placeholder="Введите № квартиры"
-                />
-              </label>
-            </div>
-            <div class="address-form__input">
-              <label class="input">
-                <span>Комментарий</span>
-                <input
-                  type="text"
-                  name="addr-comment"
-                  placeholder="Введите комментарий"
-                />
-              </label>
-            </div>
-          </div>
-
-          <div class="address-form__buttons">
-            <button type="button" class="button button--transparent">
-              Удалить
-            </button>
-            <button type="submit" class="button">Сохранить</button>
-          </div>
-        </form>
-      </div>
+      </template>
+      <template v-else>
+        <p>Ваш список адресов пуст.</p>
+      </template>
 
       <div class="layout__button">
-        <button type="button" class="button button--border">
+        <button
+          type="button"
+          class="button button--border"
+          :disabled="isAdding"
+          @click="showEditCard"
+        >
           Добавить новый адрес
         </button>
       </div>
@@ -148,9 +81,74 @@
 </template>
 
 <script>
+import { mapGetters, mapActions, mapMutations } from "vuex";
+
+import ProfileAddress from "@/modules/profile/components/ProfileAddress";
+import ProfileAddressEdit from "@/modules/profile/components/ProfileAddressEdit";
+
+import generateId from "@/common/mixins/generateId";
+import userAvatar from "@/common/mixins/userAvatar";
+
 export default {
   name: "Profile",
+
+  components: {
+    ProfileAddress,
+    ProfileAddressEdit,
+  },
+
+  mixins: [generateId, userAvatar],
+
+  data() {
+    return {
+      isAdding: false,
+    };
+  },
+
+  computed: {
+    ...mapGetters("Auth", ["getUserAttribute", "addresses"]),
+
+    newAddressIndex() {
+      return this.$generateId(this.addresses);
+    },
+  },
+
+  methods: {
+    ...mapMutations("Auth", ["EDIT_ADDRESS"]),
+    ...mapActions("Auth", ["createAddress", "updateAddress", "removeAddress"]),
+
+    createHandler(entity) {
+      entity.userId = this.getUserAttribute("id");
+
+      this.createAddress(entity);
+      this.hideEditCard();
+    },
+
+    updateHandler(entity) {
+      this.updateAddress(entity);
+    },
+
+    removeHandler(id) {
+      this.removeAddress(id);
+    },
+
+    showEditCard() {
+      this.isAdding = true;
+    },
+
+    hideEditCard() {
+      this.isAdding = false;
+    },
+  },
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+::v-deep .address-form {
+  margin-top: 8px;
+
+  &:first-child {
+    margin-top: 0;
+  }
+}
+</style>

@@ -18,7 +18,7 @@ export default {
       if (this.selected.length) {
         this.selected.forEach((item) => {
           if (item.id === this.id) {
-            value = item.count;
+            value = item.quantity;
           }
         });
       }

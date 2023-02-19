@@ -44,16 +44,10 @@
 <script>
 import { mapMutations } from "vuex";
 
-import ItemCounter from "@/common/components/ItemCounter";
-
-import productCount from "@/mixins/productCount.js";
+import productCount from "@/common/mixins/productCount.js";
 
 export default {
   name: "CartProductSelector",
-
-  components: {
-    ItemCounter,
-  },
 
   mixins: [productCount],
 
@@ -85,16 +79,12 @@ export default {
     },
 
     totalPrice() {
-      return this.order.price * this.order.count;
+      return this.order.price * this.order.quantity;
     },
   },
 
   methods: {
-    ...mapMutations("Builder", [
-      "SET_BUILDER",
-      "SET_BUILDER_NAME",
-      "SET_BUILDER_PRICE",
-    ]),
+    ...mapMutations("Builder", ["SET_BUILDER", "SET_BUILDER_NAME"]),
 
     changeCount(state) {
       const builder = {};

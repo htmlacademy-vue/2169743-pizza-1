@@ -15,9 +15,29 @@
         <router-link to="/cart">{{ orderPrice }} ₽</router-link>
       </div>
       <div class="header__user">
-        <router-link to="/login" class="header__login">
-          <span>Войти</span>
-        </router-link>
+        <template v-if="isAuthenticated">
+          <router-link to="/profile">
+            <picture>
+              <source type="image/webp" :srcset="$userAvatar([1, 2], true)" />
+              <img
+                :src="$userAvatar()"
+                :srcset="$userAvatar([2])"
+                :alt="getUserAttribute('name')"
+                width="32"
+                height="32"
+              />
+            </picture>
+            <span>{{ getUserAttribute("name") }}</span>
+          </router-link>
+          <a href="#" class="header__logout" @click.prevent="$logout">
+            <span>Выйти</span>
+          </a>
+        </template>
+        <template v-else>
+          <router-link to="/login" class="header__login">
+            <span>Войти</span>
+          </router-link>
+        </template>
       </div>
     </header>
 
@@ -26,13 +46,20 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapState, mapGetters } from "vuex";
+
+import logout from "@/common/mixins/logout";
+import userAvatar from "@/common/mixins/userAvatar";
 
 export default {
   name: "AppLayout",
 
+  mixins: [logout, userAvatar],
+
   computed: {
-    ...mapGetters("Orders", ["orderPrice"]),
+    ...mapState("Auth", ["isAuthenticated"]),
+    ...mapGetters("Auth", ["getUserAttribute"]),
+    ...mapGetters("Cart", ["orderPrice"]),
   },
 };
 </script>
