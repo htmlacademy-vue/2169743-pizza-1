@@ -1,14 +1,14 @@
 import Vue from "vue";
-import ItemCounter from "@/common/components/ItemCounter";
-import Popup from "@/common/components/Popup";
-import RadioButton from "@/common/components/RadioButton";
-import SelectorItem from "@/common/components/SelectorItem";
-import Notifications from "@/common/components/Notifications";
+import AppItemCounter from "@/common/components/AppItemCounter";
+import AppPopup from "@/common/components/AppPopup";
+import AppRadioButton from "@/common/components/AppRadioButton";
+import AppSelectorItem from "@/common/components/AppSelectorItem";
+import AppNotifications from "@/common/components/AppNotifications";
 import AppInput from "@/common/components/AppInput";
 
-Vue.component("ItemCounter", ItemCounter);
-Vue.component("Popup", Popup);
-Vue.component("RadioButton", RadioButton);
-Vue.component("SelectorItem", SelectorItem);
-Vue.component("Notifications", Notifications);
+Vue.component("AppItemCounter", AppItemCounter);
+Vue.component("AppPopup", AppPopup);
+Vue.component("AppRadioButton", AppRadioButton);
+Vue.component("AppSelectorItem", AppSelectorItem);
+Vue.component("AppNotifications", AppNotifications);
 Vue.component("AppInput", AppInput);

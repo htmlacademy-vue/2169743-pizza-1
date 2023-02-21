@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Notifications />
+    <AppNotifications />
 
     <component :is="layout">
       <router-view />

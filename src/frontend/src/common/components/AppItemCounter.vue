@@ -31,7 +31,7 @@
 const COLORS = ["orange"];
 
 export default {
-  name: "ItemCounter",
+  name: "AppItemCounter",
 
   props: {
     value: {
@@ -70,5 +70,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped></style>

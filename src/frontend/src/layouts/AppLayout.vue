@@ -18,10 +18,10 @@
         <template v-if="isAuthenticated">
           <router-link to="/profile">
             <picture>
-              <source type="image/webp" :srcset="$userAvatar([1, 2], true)" />
+              <source type="image/webp" :srcset="userAvatar([1, 2], true)" />
               <img
-                :src="$userAvatar()"
-                :srcset="$userAvatar([2])"
+                :src="userAvatar"
+                :srcset="userAvatar([2])"
                 :alt="getUserAttribute('name')"
                 width="32"
                 height="32"
@@ -49,16 +49,15 @@
 import { mapState, mapGetters } from "vuex";
 
 import logout from "@/common/mixins/logout";
-import userAvatar from "@/common/mixins/userAvatar";
 
 export default {
   name: "AppLayout",
 
-  mixins: [logout, userAvatar],
+  mixins: [logout],
 
   computed: {
     ...mapState("Auth", ["isAuthenticated"]),
-    ...mapGetters("Auth", ["getUserAttribute"]),
+    ...mapGetters("Auth", ["getUserAttribute", "userAvatar"]),
     ...mapGetters("Cart", ["orderPrice"]),
   },
 };

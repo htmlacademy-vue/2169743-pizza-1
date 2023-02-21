@@ -73,7 +73,7 @@
             </div>
           </div>
 
-          <SelectorItem class="content__pizza" @selectDrop="handleDrop" />
+          <AppSelectorItem class="content__pizza" @selectDrop="handleDrop" />
         </div>
       </form>
     </main>
@@ -120,17 +120,17 @@ export default {
     ]),
     ...mapMutations("Cart", ["PUSH_ORDER"]),
 
-    selectDough(dough) {
+    selectDough({ name, type, value }) {
       const tempDough = {
         id: null,
-        name: dough.name,
-        type: dough.type,
-        value: dough.value,
+        name,
+        type,
+        value,
         price: null,
       };
 
       this.pizza.doughes.forEach((el) => {
-        if (el.name === dough.name) {
+        if (el.name === name) {
           tempDough.id = el.id;
           tempDough.price = el.price;
         }
@@ -156,16 +156,16 @@ export default {
       this.SET_SIZE(tempSize);
     },
 
-    selectSauce(sauce) {
+    selectSauce({ name, value }) {
       const tempSauce = {
         id: null,
-        name: sauce.name,
-        value: sauce.value,
+        name,
+        value,
         price: null,
       };
 
       this.pizza.sauces.forEach((el) => {
-        if (el.name === sauce.name) {
+        if (el.name === name) {
           tempSauce.id = el.id;
           tempSauce.price = el.price;
         }
@@ -177,7 +177,7 @@ export default {
     selectIngredients(currentFill) {
       this.pizza.ingredients.forEach((el) => {
         if (el.name === currentFill.name) {
-          currentFill.id = el.id;
+          currentFill.ingredientId = el.id;
           currentFill.price = el.price;
         }
       });

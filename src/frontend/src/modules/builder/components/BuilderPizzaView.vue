@@ -24,6 +24,9 @@
 </template>
 
 <script>
+import DOUGH from "@/common/enums/dough";
+import SAUCE from "@/common/enums/sauce";
+
 export default {
   name: "BuilderPizzaView",
 
@@ -51,11 +54,11 @@ export default {
 
   computed: {
     doughValue() {
-      return this.dough?.name === "Тонкое" ? "small" : "big";
+      return this.dough?.id === DOUGH.small ? "small" : "big";
     },
 
     sauceValue() {
-      return this.sauce?.name === "Томатный" ? "tomato" : "creamy";
+      return this.sauce?.id === SAUCE.tomato ? "tomato" : "creamy";
     },
 
     foundationClass() {

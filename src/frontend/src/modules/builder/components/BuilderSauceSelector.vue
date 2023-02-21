@@ -2,7 +2,7 @@
   <div class="ingredients__sauce">
     <slot />
 
-    <RadioButton
+    <AppRadioButton
       v-for="item in items"
       :key="item.id"
       class="ingredients__input"
@@ -16,10 +16,7 @@
 </template>
 
 <script>
-const cream = {
-  creamy: "Сливочный",
-  tomato: "Томатный",
-};
+import CREAM from "@/common/enums/cream";
 
 export default {
   name: "BuilderSauceSelector",
@@ -40,8 +37,8 @@ export default {
     sauceValue(label) {
       let value = "";
 
-      for (const key in cream) {
-        if (label === cream[key]) {
+      for (const key in CREAM) {
+        if (label === CREAM[key]) {
           value = key;
         }
       }

@@ -13,7 +13,7 @@ const rules = {
     rule: (value) => {
       return value ? EMAIL_REGEX.test(String(value).toLowerCase()) : true;
     },
-    message: "Электроная почта имеет неверный формат",
+    message: "Электронная почта имеет неверный формат",
   },
   url: {
     rule: (value) => (value ? URL_REGEX.test(value) : true),

@@ -15,6 +15,7 @@ import {
 } from "@/store/mutations-types";
 
 import { MESSAGE_LIVE_TIME } from "@/common/constants";
+import DOUGH from "@/common/enums/dough";
 
 Vue.use(Vuex);
 
@@ -41,11 +42,44 @@ const getters = {
     return state.misc;
   },
 
-  getItemEntity: (state) => (entity, id) =>
-    state[entity].find((element) => element.id === id),
+  getItemEntity: (state) => (entity, id) => {
+    if (state.hasOwnProperty(entity)) {
+      return state[entity].find((element) => element.id === id);
+    }
+  },
 
   getAttrItemEntity: (state, getters) => (entity, id, attr) => {
-    return getters.getItemEntity(entity, id)[attr];
+    const element = getters.getItemEntity(entity, id);
+
+    return element && element[attr];
+  },
+
+  doughText: (state, getters) => (sizeId, doughId) => {
+    const sizeLabel = getters.getAttrItemEntity("sizes", sizeId, "name");
+    const doughLabel = doughId === DOUGH.small ? "тонком" : "толстом";
+
+    return `${sizeLabel}, на ${doughLabel} тексте`;
+  },
+
+  sauceText: (state, getters) => (id) => {
+    const sauce = getters.getAttrItemEntity("sauces", id, "name");
+
+    return `Соус: ${sauce.toLowerCase()}`;
+  },
+
+  ingredientsText: (state, getters) => (ingredients) => {
+    const tmpIngredients = [];
+
+    ingredients.forEach(({ ingredientId }) => {
+      const label = getters.getAttrItemEntity(
+        "ingredients",
+        ingredientId,
+        "name"
+      );
+      tmpIngredients.push(label.toLowerCase());
+    });
+
+    return `Начинка: ${tmpIngredients.join(", ")}`;
   },
 };
 

@@ -26,20 +26,20 @@
 
       <div class="user">
         <picture>
-          <source type="image/webp" :srcset="$userAvatar([2, 4], true, true)" />
+          <source type="image/webp" :srcset="userAvatar([2, 4], true, true)" />
           <img
-            :src="$userAvatar([2])"
-            :srcset="$userAvatar([4])"
-            :alt="getUserAttribute('name')"
+            :src="userAvatar([2])"
+            :srcset="userAvatar([4])"
+            :alt="userName"
             width="72"
             height="72"
           />
         </picture>
         <div class="user__name">
-          <span>{{ getUserAttribute("name") }}</span>
+          <span>{{ userName }}</span>
         </div>
         <p class="user__phone">
-          Контактный телефон: <span>{{ getUserAttribute("phone") }}</span>
+          Контактный телефон: <span>{{ userPhone }}</span>
         </p>
       </div>
 
@@ -87,7 +87,6 @@ import ProfileAddress from "@/modules/profile/components/ProfileAddress";
 import ProfileAddressEdit from "@/modules/profile/components/ProfileAddressEdit";
 
 import generateId from "@/common/mixins/generateId";
-import userAvatar from "@/common/mixins/userAvatar";
 
 export default {
   name: "Profile",
@@ -97,7 +96,7 @@ export default {
     ProfileAddressEdit,
   },
 
-  mixins: [generateId, userAvatar],
+  mixins: [generateId],
 
   data() {
     return {
@@ -106,10 +105,18 @@ export default {
   },
 
   computed: {
-    ...mapGetters("Auth", ["getUserAttribute", "addresses"]),
+    ...mapGetters("Auth", ["getUserAttribute", "addresses", "userAvatar"]),
 
     newAddressIndex() {
       return this.$generateId(this.addresses);
+    },
+
+    userName() {
+      return this.getUserAttribute("name");
+    },
+
+    userPhone() {
+      return this.getUserAttribute("phone");
     },
   },
 

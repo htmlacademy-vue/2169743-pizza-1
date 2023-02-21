@@ -122,7 +122,7 @@
       </div>
     </section>
 
-    <Popup v-if="isPopupOpen" @close="closePopup" />
+    <AppPopup v-if="isPopupOpen" @close="closePopup" />
   </form>
 </template>
 
@@ -405,32 +405,32 @@ export default {
     },
 
     pizzaData(pizzas) {
-      return pizzas.map((pizza) => {
-        const { name, dough, sauce, size, quantity, ingredients } = pizza;
-
-        return {
-          name,
-          sauceId: sauce.id,
-          doughId: dough.id,
-          sizeId: size.id,
-          quantity,
-          ingredients: this.ingredientData(ingredients),
-        };
-      });
+      return pizzas.map(
+        ({ name, dough, sauce, size, quantity, ingredients }) => {
+          return {
+            name,
+            sauceId: sauce.id,
+            doughId: dough.id,
+            sizeId: size.id,
+            quantity,
+            ingredients: this.ingredientData(ingredients),
+          };
+        }
+      );
     },
 
     ingredientData(ingredients) {
-      return ingredients.map((ingredient) => {
+      return ingredients.map(({ ingredientId, quantity }) => {
         return {
-          ingredientId: ingredient.id,
-          quantity: ingredient.quantity,
+          ingredientId,
+          quantity,
         };
       });
     },
 
     miscData(miscs) {
-      return miscs.map((misc) => {
-        return { miscId: misc.id, quantity: misc.quantity };
+      return miscs.map(({ id, quantity }) => {
+        return { miscId: id, quantity };
       });
     },
   },

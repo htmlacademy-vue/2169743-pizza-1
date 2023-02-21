@@ -41,7 +41,7 @@ import { mapGetters, mapMutations, mapActions } from "vuex";
 
 import OrderCard from "@/modules/orders/components/OrderCard";
 
-import calcPrice from "@/common/mixins/calcPrice.js";
+import calcPrice from "@/common/mixins/calcPrice";
 
 export default {
   name: "Orders",
@@ -74,8 +74,7 @@ export default {
       this.removeOrder(id);
     },
 
-    repeatHandler(order) {
-      const { orderAddress, orderPizzas, orderMisc } = order;
+    repeatHandler({ orderAddress, orderPizzas, orderMisc }) {
       const receive = {};
 
       this.CLEAR_STATE();
@@ -133,17 +132,13 @@ export default {
       }
 
       if (orderMisc?.length) {
-        orderMisc.forEach((misc) => {
-          const miscPrice = this.getAttrItemEntity(
-            "misc",
-            misc.miscId,
-            "price"
-          );
+        orderMisc.forEach(({ miscId, quantity }) => {
+          const miscPrice = this.getAttrItemEntity("misc", miscId, "price");
 
           this.PUSH_MISC({
-            id: misc.miscId,
+            id: miscId,
             price: miscPrice,
-            quantity: misc.quantity,
+            quantity,
           });
         });
       }

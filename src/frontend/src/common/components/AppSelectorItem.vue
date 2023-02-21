@@ -39,7 +39,7 @@ import BuilderPizzaView from "@/modules/builder/components/BuilderPizzaView";
 import BuilderPriceCounter from "@/modules/builder/components/BuilderPriceCounter";
 
 export default {
-  name: "SelectorItem",
+  name: "AppSelectorItem",
 
   components: {
     BuilderPizzaView,
@@ -63,5 +63,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped></style>
