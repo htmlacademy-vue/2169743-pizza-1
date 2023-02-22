@@ -122,7 +122,9 @@
       </div>
     </section>
 
-    <AppPopup v-if="isPopupOpen" @close="closePopup" />
+    <transition name="fade">
+      <AppPopup v-if="isPopupOpen" @close="closePopup" />
+    </transition>
   </form>
 </template>
 
@@ -340,14 +342,16 @@ export default {
     closePopup() {
       this.isPopupOpen = false;
 
-      this.$store.commit("Builder/CLEAR_STATE");
-      this.$store.commit("Cart/CLEAR_STATE");
+      setTimeout(() => {
+        if (this.isAuthenticated) {
+          this.$router.push("/orders");
+        } else {
+          this.$router.push("/");
+        }
 
-      if (this.isAuthenticated) {
-        this.$router.push("/orders");
-      } else {
-        this.$router.push("/");
-      }
+        this.$store.commit("Builder/CLEAR_STATE");
+        this.$store.commit("Cart/CLEAR_STATE");
+      }, 500);
     },
 
     changeCountBuilder(currentBuilder) {
@@ -436,3 +440,15 @@ export default {
   },
 };
 </script>
+
+<style>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>

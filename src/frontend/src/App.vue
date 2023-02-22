@@ -1,9 +1,16 @@
 <template>
-  <div id="app">
+  <div id="app" class="app">
     <AppNotifications />
 
-    <component :is="layout">
-      <router-view />
+    <component :is="layout" class="app__layout">
+      <transition
+        name="view"
+        mode="out-in"
+        enter-active-class="animate__animated animate__slideInRight"
+        leave-to-class="animate__animated animate__slideOutLeft"
+      >
+        <router-view />
+      </transition>
     </component>
   </div>
 </template>
@@ -44,4 +51,24 @@ export default {
 
 <style lang="scss">
 @import "~@/assets/scss/app";
+
+.app {
+  position: relative;
+
+  width: 100vw;
+  min-height: 100vh;
+
+  &__layout {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+}
+
+.animate__animated {
+  transition-duration: 0.75s !important;
+  animation-duration: 0.75s !important;
+}
 </style>

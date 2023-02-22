@@ -1,23 +1,6 @@
 <template>
   <main class="layout">
-    <div class="layout__sidebar sidebar">
-      <router-link to="/" class="logo layout__logo">
-        <img
-          src="@/assets/img/logo.svg"
-          alt="V!U!E! Pizza logo"
-          width="90"
-          height="40"
-        />
-      </router-link>
-
-      <router-link to="/orders" class="layout__link">
-        История заказов
-      </router-link>
-
-      <router-link to="/profile" class="layout__link layout__link--active">
-        Мои данные
-      </router-link>
-    </div>
+    <AppSidebar />
 
     <div class="layout__content">
       <div class="layout__title">
@@ -83,6 +66,7 @@
 <script>
 import { mapGetters, mapActions, mapMutations } from "vuex";
 
+import AppSidebar from "@/common/components/AppSidebar";
 import ProfileAddress from "@/modules/profile/components/ProfileAddress";
 import ProfileAddressEdit from "@/modules/profile/components/ProfileAddressEdit";
 
@@ -92,6 +76,7 @@ export default {
   name: "Profile",
 
   components: {
+    AppSidebar,
     ProfileAddress,
     ProfileAddressEdit,
   },
