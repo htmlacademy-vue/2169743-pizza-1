@@ -122,7 +122,9 @@
       </div>
     </section>
 
-    <Popup v-if="isPopupOpen" @close="closePopup" />
+    <transition name="fade">
+      <AppPopup v-if="isPopupOpen" @close="closePopup" />
+    </transition>
   </form>
 </template>
 
@@ -340,14 +342,16 @@ export default {
     closePopup() {
       this.isPopupOpen = false;
 
-      this.$store.commit("Builder/CLEAR_STATE");
-      this.$store.commit("Cart/CLEAR_STATE");
+      setTimeout(() => {
+        if (this.isAuthenticated) {
+          this.$router.push("/orders");
+        } else {
+          this.$router.push("/");
+        }
 
-      if (this.isAuthenticated) {
-        this.$router.push("/orders");
-      } else {
-        this.$router.push("/");
-      }
+        this.$store.commit("Builder/CLEAR_STATE");
+        this.$store.commit("Cart/CLEAR_STATE");
+      }, 500);
     },
 
     changeCountBuilder(currentBuilder) {
@@ -405,34 +409,46 @@ export default {
     },
 
     pizzaData(pizzas) {
-      return pizzas.map((pizza) => {
-        const { name, dough, sauce, size, quantity, ingredients } = pizza;
-
-        return {
-          name,
-          sauceId: sauce.id,
-          doughId: dough.id,
-          sizeId: size.id,
-          quantity,
-          ingredients: this.ingredientData(ingredients),
-        };
-      });
+      return pizzas.map(
+        ({ name, dough, sauce, size, quantity, ingredients }) => {
+          return {
+            name,
+            sauceId: sauce.id,
+            doughId: dough.id,
+            sizeId: size.id,
+            quantity,
+            ingredients: this.ingredientData(ingredients),
+          };
+        }
+      );
     },
 
     ingredientData(ingredients) {
-      return ingredients.map((ingredient) => {
+      return ingredients.map(({ ingredientId, quantity }) => {
         return {
-          ingredientId: ingredient.id,
-          quantity: ingredient.quantity,
+          ingredientId,
+          quantity,
         };
       });
     },
 
     miscData(miscs) {
-      return miscs.map((misc) => {
-        return { miscId: misc.id, quantity: misc.quantity };
+      return miscs.map(({ id, quantity }) => {
+        return { miscId: id, quantity };
       });
     },
   },
 };
 </script>
+
+<style>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>

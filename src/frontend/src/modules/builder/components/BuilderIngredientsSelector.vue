@@ -10,7 +10,7 @@
       {{ label }}
     </span>
 
-    <ItemCounter
+    <AppItemCounter
       class="ingredients__counter"
       :value="countValue"
       :max="3"
@@ -20,23 +20,7 @@
 </template>
 
 <script>
-const ingredient = {
-  ananas: "Ананас",
-  bacon: "Бекон",
-  blue_cheese: "Блю чиз",
-  cheddar: "Чеддер",
-  chile: "Чили",
-  ham: "Ветчина",
-  jalapeno: "Халапеньо",
-  mozzarella: "Моцарелла",
-  mushrooms: "Грибы",
-  olives: "Маслины",
-  onion: "Лук",
-  parmesan: "Пармезан",
-  salami: "Салями",
-  salmon: "Лосось",
-  tomatoes: "Томаты",
-};
+import INGREDIENT from "@/common/enums/ingredient";
 
 export default {
   name: "BuilderIngredientsSelector",
@@ -67,8 +51,8 @@ export default {
     ingredientValue() {
       let value = "";
 
-      for (const key in ingredient) {
-        if (this.label === ingredient[key]) {
+      for (const key in INGREDIENT) {
+        if (this.label === INGREDIENT[key]) {
           value = key;
         }
       }

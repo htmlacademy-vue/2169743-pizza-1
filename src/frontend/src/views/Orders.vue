@@ -1,19 +1,6 @@
 <template>
   <main class="layout">
-    <div class="layout__sidebar sidebar">
-      <router-link to="/" class="logo layout__logo">
-        <img
-          src="@/assets/img/logo.svg"
-          alt="V!U!E! Pizza logo"
-          width="90"
-          height="40"
-        />
-      </router-link>
-      <router-link to="/orders" class="layout__link layout__link--active">
-        История заказов
-      </router-link>
-      <router-link to="/profile" class="layout__link">Мои данные</router-link>
-    </div>
+    <AppSidebar />
 
     <div class="layout__content">
       <div class="layout__title">
@@ -39,18 +26,20 @@
 <script>
 import { mapGetters, mapMutations, mapActions } from "vuex";
 
+import AppSidebar from "@/common/components/AppSidebar";
 import OrderCard from "@/modules/orders/components/OrderCard";
 
-import calcPrice from "@/common/mixins/calcPrice.js";
+import calcPrice from "@/common/mixins/calcPrice";
 
 export default {
   name: "Orders",
 
-  mixins: [calcPrice],
-
   components: {
+    AppSidebar,
     OrderCard,
   },
+
+  mixins: [calcPrice],
 
   computed: {
     ...mapGetters(["getItemEntity", "getAttrItemEntity"]),
@@ -74,8 +63,7 @@ export default {
       this.removeOrder(id);
     },
 
-    repeatHandler(order) {
-      const { orderAddress, orderPizzas, orderMisc } = order;
+    repeatHandler({ orderAddress, orderPizzas, orderMisc }) {
       const receive = {};
 
       this.CLEAR_STATE();
@@ -133,17 +121,13 @@ export default {
       }
 
       if (orderMisc?.length) {
-        orderMisc.forEach((misc) => {
-          const miscPrice = this.getAttrItemEntity(
-            "misc",
-            misc.miscId,
-            "price"
-          );
+        orderMisc.forEach(({ miscId, quantity }) => {
+          const miscPrice = this.getAttrItemEntity("misc", miscId, "price");
 
           this.PUSH_MISC({
-            id: misc.miscId,
+            id: miscId,
             price: miscPrice,
-            quantity: misc.quantity,
+            quantity,
           });
         });
       }

@@ -6,7 +6,7 @@
       </div>
 
       <div class="order__sum">
-        <span>Сумма заказа: {{ calcPrice(order) }} ₽</span>
+        <span>Сумма заказа: {{ calcPrice }} ₽</span>
       </div>
 
       <div class="order__button">
@@ -42,9 +42,9 @@
           <div class="product__text">
             <h2>{{ pizza.name }}</h2>
             <ul>
-              <li>{{ generalLayer(pizza) }}</li>
-              <li>{{ sauceLayer(pizza) }}</li>
-              <li>{{ ingredientLayer(pizza) }}</li>
+              <li>{{ doughText(pizza.sizeId, pizza.doughId) }}</li>
+              <li>{{ sauceText(pizza.sauceId) }}</li>
+              <li>{{ ingredientsText(pizza.ingredients) }}</li>
             </ul>
           </div>
         </div>
@@ -92,57 +92,42 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["getItemEntity", "getAttrItemEntity"]),
-    ...mapGetters("Auth", ["getAddressById"]),
-  },
+    ...mapGetters([
+      "getItemEntity",
+      "getAttrItemEntity",
+      "doughText",
+      "sauceText",
+      "ingredientsText",
+    ]),
+    ...mapGetters("Auth", ["getAddressById", "addressText"]),
 
-  methods: {
-    calcPrice(order) {
-      const { orderPizzas, orderMisc } = order;
+    pizzaCost() {
+      const { orderPizzas } = this.order;
 
-      const pizzaCost = orderPizzas?.reduce((total, pizza) => {
+      return orderPizzas?.reduce((total, pizza) => {
         return total + this.pizzaPrice(pizza) * pizza.quantity;
       }, 0);
-      const miscCost =
+    },
+
+    miscCost() {
+      const { orderMisc } = this.order;
+
+      const cost =
         orderMisc?.reduce((total, misc) => {
           const price = this.getAttrItemEntity("misc", misc.miscId, "price");
           return total + price * misc.quantity;
         }, 0) ?? 0;
 
-      return pizzaCost + miscCost;
+      return cost;
     },
 
-    generalLayer(pizza) {
-      const { sizeId, doughId } = pizza;
-      const size = this.getItemEntity("sizes", sizeId);
-      const dough = this.getItemEntity("dough", doughId);
-      const doughLabel = dough === "Тонкое" ? "тонком" : "толстом";
-
-      return `${size.name}, на ${doughLabel} тесте`;
+    calcPrice() {
+      return this.pizzaCost + this.miscCost;
     },
+  },
 
-    sauceLayer(pizza) {
-      const { sauceId } = pizza;
-      const sauce = this.getItemEntity("sauces", sauceId);
-
-      return `Соус: ${sauce.name.toLowerCase()}`;
-    },
-
-    ingredientLayer(pizza) {
-      const ingredients = [];
-
-      pizza.ingredients.forEach((ingredient) => {
-        const { ingredientId } = ingredient;
-        const ingredientData = this.getItemEntity("ingredients", ingredientId);
-        ingredients.push(ingredientData.name.toLowerCase());
-      });
-
-      return `Начинка: ${ingredients.join(", ")}`;
-    },
-
-    pizzaPrice(pizza) {
-      const { doughId, sauceId, sizeId, ingredients } = pizza;
-
+  methods: {
+    pizzaPrice({ doughId, sauceId, sizeId, ingredients }) {
       const dough = this.getItemEntity("dough", doughId);
       const sauce = this.getItemEntity("sauces", sauceId);
       const size = this.getItemEntity("sizes", sizeId);
@@ -173,17 +158,19 @@ export default {
 
     miscPriceLabel(id, quantity) {
       const miscPrice = this.getAttrItemEntity("misc", id, "price");
+
       return quantity > 1 ? `${quantity}x${miscPrice}` : miscPrice;
     },
 
-    orderAddress(order) {
-      const address = this.getAddressById(order.addressId);
+    orderAddress({ addressId, orderAddress }) {
+      const address = this.getAddressById(addressId);
 
       if (address) {
         return address.name;
       } else {
-        const { street, building, flat } = order.orderAddress;
-        return `ул. ${street}, д. ${building}, кв. ${flat}`;
+        const { street, building, flat } = orderAddress;
+
+        return this.addressText(street, building, flat);
       }
     },
 

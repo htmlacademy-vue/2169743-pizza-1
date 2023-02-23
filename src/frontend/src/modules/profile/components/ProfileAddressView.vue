@@ -12,7 +12,7 @@
       </div>
     </div>
 
-    <p>{{ computedAddress }}</p>
+    <p>{{ addressText(address.street, address.building, address.flat) }}</p>
 
     <small v-if="address.comment">
       {{ address.comment }}
@@ -21,6 +21,8 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
   name: "ProfileAddressView",
 
@@ -32,10 +34,7 @@ export default {
   },
 
   computed: {
-    computedAddress() {
-      const { street, building, flat } = this.address;
-      return `${street}, д. ${building}, кв. ${flat}`;
-    },
+    ...mapGetters("Auth", ["addressText"]),
   },
 
   methods: {

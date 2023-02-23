@@ -6,24 +6,29 @@
     @drop.prevent="drop"
   >
     <div class="pizza__wrapper">
-      <template v-if="ingredients.length">
-        <template v-for="filling in ingredients">
+      <transition-group
+        name="filling"
+        appear
+        enter-active-class="animate__animated animate__fadeIn"
+        leave-active-class="animate__animated animate__fadeOut"
+      >
+        <template v-for="{ quantity, value } in ingredients">
           <div
-            v-for="time in filling.quantity"
-            :key="`${filling.value} - ${time}`"
-            :class="fillingClass(filling.value, time)"
+            v-for="time in quantity"
+            :key="`${value} - ${time}`"
             class="pizza__filling"
+            :class="fillingClass(value, time)"
           />
         </template>
-      </template>
-      <template v-else>
-        <div class="pizza__filling"></div>
-      </template>
+      </transition-group>
     </div>
   </div>
 </template>
 
 <script>
+import DOUGH from "@/common/enums/dough";
+import SAUCE from "@/common/enums/sauce";
+
 export default {
   name: "BuilderPizzaView",
 
@@ -51,11 +56,11 @@ export default {
 
   computed: {
     doughValue() {
-      return this.dough?.name === "Тонкое" ? "small" : "big";
+      return this.dough?.id === DOUGH.small ? "small" : "big";
     },
 
     sauceValue() {
-      return this.sauce?.name === "Томатный" ? "tomato" : "creamy";
+      return this.sauce?.id === SAUCE.tomato ? "tomato" : "creamy";
     },
 
     foundationClass() {
@@ -73,8 +78,6 @@ export default {
           break;
         case 3:
           fillingClass += " pizza__filling--third";
-          break;
-        default:
           break;
       }
 

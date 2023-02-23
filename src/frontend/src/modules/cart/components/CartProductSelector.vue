@@ -11,18 +11,14 @@
       <div class="product__text">
         <h2>{{ order.name }}</h2>
         <ul>
-          <li>
-            {{ order.size.name }}, на
-            {{ doughLabel }}
-            тесте
-          </li>
-          <li>Соус: {{ sauceLabel }}</li>
-          <li>Начинка: {{ fillings }}</li>
+          <li>{{ doughText(order.size.id, order.dough.id) }}</li>
+          <li>{{ sauceText(order.sauce.id) }}</li>
+          <li>{{ ingredientsText(order.ingredients) }}</li>
         </ul>
       </div>
     </div>
 
-    <ItemCounter
+    <AppItemCounter
       class="cart-list__counter"
       :value="$countValue"
       color="orange"
@@ -42,7 +38,7 @@
 </template>
 
 <script>
-import { mapMutations } from "vuex";
+import { mapGetters, mapMutations } from "vuex";
 
 import productCount from "@/common/mixins/productCount.js";
 
@@ -64,19 +60,7 @@ export default {
   },
 
   computed: {
-    doughLabel() {
-      return this.order.dough.type === "light" ? "тонком" : "толстом";
-    },
-
-    sauceLabel() {
-      return this.order.sauce.name.toLowerCase();
-    },
-
-    fillings() {
-      return this.order.ingredients
-        .map((el) => el.name.toLowerCase())
-        .join(", ");
-    },
+    ...mapGetters(["doughText", "sauceText", "ingredientsText"]),
 
     totalPrice() {
       return this.order.price * this.order.quantity;

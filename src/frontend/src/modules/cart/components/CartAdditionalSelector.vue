@@ -11,7 +11,7 @@
     </p>
 
     <div class="additional-list__wrapper">
-      <ItemCounter
+      <AppItemCounter
         class="additional-list__counter"
         :value="$countValue"
         color="orange"

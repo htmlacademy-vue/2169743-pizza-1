@@ -44,6 +44,7 @@
           :label="field.flat.label"
           :name="field.flat.name"
           :placeholder="field.flat.placeholder"
+          :required="field.flat.required"
           v-model.trim="field.flat.value"
         />
       </div>
@@ -53,6 +54,7 @@
           :label="field.comment.label"
           :name="field.comment.name"
           :placeholder="field.comment.placeholder"
+          :required="field.comment.required"
           v-model.trim="field.comment.value"
         />
       </div>
@@ -62,7 +64,7 @@
       <button
         type="button"
         class="button button--transparent"
-        :style="removeDisplay"
+        v-show="buttonShow"
         @click="resetHandler"
       >
         Удалить
@@ -119,12 +121,14 @@ export default {
           label: "Квартира",
           name: "addr-apartment",
           placeholder: "Введите № квартиры",
+          required: true,
           value: "",
         },
         comment: {
           label: "Комментарий",
           name: "addr-comment",
           placeholder: "Введите комментарий",
+          required: true,
           value: "",
         },
       },
@@ -142,10 +146,8 @@ export default {
   },
 
   computed: {
-    removeDisplay() {
-      return {
-        display: this.address?.id ? "block" : "none",
-      };
+    buttonShow() {
+      return !!this.address?.id;
     },
   },
 

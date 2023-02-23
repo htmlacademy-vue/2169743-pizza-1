@@ -3,7 +3,7 @@
     <span>{{ label }}</span>
     <input
       ref="input"
-      v-bind="attributes"
+      v-bind="$attrs"
       :value="value"
       @input="$emit('input', $event.target.value)"
     />
@@ -15,11 +15,6 @@ export default {
   name: "AppInput",
 
   inheritAttrs: false,
-
-  model: {
-    prop: "value",
-    event: "input",
-  },
 
   props: {
     tag: {
@@ -35,12 +30,6 @@ export default {
     value: {
       type: [String, Number],
       default: "",
-    },
-  },
-
-  computed: {
-    attributes() {
-      return this.$attrs;
     },
   },
 };

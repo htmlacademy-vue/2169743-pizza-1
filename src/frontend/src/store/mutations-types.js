@@ -2,11 +2,11 @@ export const CLEAR_STATE = "CLEAR_STATE";
 
 export const SET_ENTITY = "SET_ENTITY";
 export const ADD_ENTITY = "ADD_ENTITY";
-export const UPDATE_ENTITY = "UPDATE_ENTITY";
-export const DELETE_ENTITY = "DELETE_ENTITY";
 
 export const ADD_NOTIFICATION = "ADD_NOTIFICATION";
 export const DELETE_NOTIFICATION = "DELETE_NOTIFICATION";
+
+export const CHANGE_SIDEBAR_ACTIVE_TAB = "CHANGE_SIDEBAR_ACTIVE_TAB";
 
 // Builder
 export const SET_DOUGH = "SET_DOUGH";

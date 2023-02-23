@@ -8,13 +8,14 @@ import { uniqueId } from "lodash";
 import {
   SET_ENTITY,
   ADD_ENTITY,
-  UPDATE_ENTITY,
-  DELETE_ENTITY,
   ADD_NOTIFICATION,
   DELETE_NOTIFICATION,
+  CHANGE_SIDEBAR_ACTIVE_TAB,
 } from "@/store/mutations-types";
 
-import { MESSAGE_LIVE_TIME } from "@/common/constants";
+import { MESSAGE_LIVE_TIME, SIDEBAR_ACTIVE_ID } from "@/common/constants";
+import DOUGH from "@/common/enums/dough";
+import SIDEBAR_MENU from "@/common/enums/sidebarMenu";
 
 Vue.use(Vuex);
 
@@ -25,6 +26,8 @@ const state = () => ({
   sauces: [],
   ingredients: [],
   misc: [],
+  sidebarMenu: SIDEBAR_MENU,
+  sidebarActiveTab: SIDEBAR_ACTIVE_ID,
 });
 
 const getters = {
@@ -41,11 +44,52 @@ const getters = {
     return state.misc;
   },
 
-  getItemEntity: (state) => (entity, id) =>
-    state[entity].find((element) => element.id === id),
+  getItemEntity: (state) => (entity, id) => {
+    if (state.hasOwnProperty(entity)) {
+      return state[entity].find((element) => element.id === id);
+    }
+  },
 
   getAttrItemEntity: (state, getters) => (entity, id, attr) => {
-    return getters.getItemEntity(entity, id)[attr];
+    const element = getters.getItemEntity(entity, id);
+
+    return element && element[attr];
+  },
+
+  doughText: (state, getters) => (sizeId, doughId) => {
+    const sizeLabel = getters.getAttrItemEntity("sizes", sizeId, "name");
+    const doughLabel = doughId === DOUGH.small ? "тонком" : "толстом";
+
+    return `${sizeLabel}, на ${doughLabel} тексте`;
+  },
+
+  sauceText: (state, getters) => (id) => {
+    const sauce = getters.getAttrItemEntity("sauces", id, "name");
+
+    return `Соус: ${sauce.toLowerCase()}`;
+  },
+
+  ingredientsText: (state, getters) => (ingredients) => {
+    const tmpIngredients = [];
+
+    ingredients.forEach(({ ingredientId }) => {
+      const label = getters.getAttrItemEntity(
+        "ingredients",
+        ingredientId,
+        "name"
+      );
+      tmpIngredients.push(label.toLowerCase());
+    });
+
+    return `Начинка: ${tmpIngredients.join(", ")}`;
+  },
+
+  sidebarMenu(state) {
+    return state.sidebarMenu;
+  },
+
+  sidebarActiveTab(state) {
+    return state.sidebarActiveTab;
   },
 };
 
@@ -139,34 +183,6 @@ const mutations = {
     }
   },
 
-  [UPDATE_ENTITY](state, { module, entity, value }) {
-    if (module) {
-      const index = state[module][entity].findIndex(
-        ({ id }) => id === value.id
-      );
-
-      if (~index) {
-        state[module][entity].splice(index, 1, value);
-      }
-    } else {
-      const index = state[entity].findIndex(({ id }) => id === value.id);
-
-      if (~index) {
-        state[entity].splice(index, 1, value);
-      }
-    }
-  },
-
-  [DELETE_ENTITY](state, { module, entity, id }) {
-    if (module) {
-      state[module][entity] = state[module][entity].filter(
-        (e) => +e.id !== +id
-      );
-    } else {
-      state[entity] = state[entity].filter((e) => +e.id !== +id);
-    }
-  },
-
   [ADD_NOTIFICATION](state, notification) {
     state.notifications = [...state.notifications, notification];
   },
@@ -175,6 +191,10 @@ const mutations = {
     state.notifications = state.notifications.filter(
       (notification) => notification.id !== id
     );
+  },
+
+  [CHANGE_SIDEBAR_ACTIVE_TAB](state, id) {
+    state.sidebarActiveTab = id;
   },
 };
 
