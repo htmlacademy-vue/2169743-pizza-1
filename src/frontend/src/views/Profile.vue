@@ -1,72 +1,67 @@
 <template>
-  <main class="layout">
-    <AppSidebar />
-
-    <div class="layout__content">
-      <div class="layout__title">
-        <h1 class="title title--big">Мои данные</h1>
-      </div>
-
-      <div class="user">
-        <picture>
-          <source type="image/webp" :srcset="userAvatar([2, 4], true, true)" />
-          <img
-            :src="userAvatar([2])"
-            :srcset="userAvatar([4])"
-            :alt="userName"
-            width="72"
-            height="72"
-          />
-        </picture>
-        <div class="user__name">
-          <span>{{ userName }}</span>
-        </div>
-        <p class="user__phone">
-          Контактный телефон: <span>{{ userPhone }}</span>
-        </p>
-      </div>
-
-      <template v-if="addresses.length || isAdding">
-        <template v-if="addresses.length">
-          <ProfileAddress
-            v-for="address in addresses"
-            :key="address.id"
-            :address="address"
-            @update="updateHandler"
-            @remove="removeHandler"
-          />
-        </template>
-
-        <div class="layout__address" v-if="isAdding">
-          <ProfileAddressEdit
-            :index="newAddressIndex"
-            @saveData="createHandler"
-            @remove="hideEditCard"
-          />
-        </div>
-      </template>
-      <template v-else>
-        <p>Ваш список адресов пуст.</p>
-      </template>
-
-      <div class="layout__button">
-        <button
-          type="button"
-          class="button button--border"
-          :disabled="isAdding"
-          @click="showEditCard"
-        >
-          Добавить новый адрес
-        </button>
-      </div>
+  <div class="layout__content">
+    <div class="layout__title">
+      <h1 class="title title--big">Мои данные</h1>
     </div>
-  </main>
+
+    <div class="user">
+      <picture>
+        <source type="image/webp" :srcset="userAvatar([2, 4], true, true)" />
+        <img
+          :src="userAvatar([2])"
+          :srcset="userAvatar([4])"
+          :alt="userName"
+          width="72"
+          height="72"
+        />
+      </picture>
+      <div class="user__name">
+        <span>{{ userName }}</span>
+      </div>
+      <p class="user__phone">
+        Контактный телефон: <span>{{ userPhone }}</span>
+      </p>
+    </div>
+
+    <template v-if="addresses.length || isAdding">
+      <template v-if="addresses.length">
+        <ProfileAddress
+          v-for="address in addresses"
+          :key="address.id"
+          :address="address"
+          @update="updateHandler"
+          @remove="removeHandler"
+        />
+      </template>
+
+      <div class="layout__address" v-if="isAdding">
+        <ProfileAddressEdit
+          :index="newAddressIndex"
+          @saveData="createHandler"
+          @remove="hideEditCard"
+        />
+      </div>
+    </template>
+    <template v-else>
+      <p>Ваш список адресов пуст.</p>
+    </template>
+
+    <div class="layout__button">
+      <button
+        type="button"
+        class="button button--border"
+        :disabled="isAdding"
+        @click="showEditCard"
+      >
+        Добавить новый адрес
+      </button>
+    </div>
+  </div>
 </template>
 
 <script>
 import { mapGetters, mapActions, mapMutations } from "vuex";
 
-import AppSidebar from "@/common/components/AppSidebar";
 import ProfileAddress from "@/modules/profile/components/ProfileAddress";
 import ProfileAddressEdit from "@/modules/profile/components/ProfileAddressEdit";
 
@@ -76,7 +71,6 @@ export default {
   name: "Profile",
 
   components: {
-    AppSidebar,
     ProfileAddress,
     ProfileAddressEdit,
   },

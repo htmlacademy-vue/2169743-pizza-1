@@ -28,7 +28,7 @@ export default [
     name: "Profile",
     component: () => import("../views/Profile.vue"),
     meta: {
-      layout: "App",
+      layout: "User",
       middlewares: [auth],
     },
   },
@@ -45,7 +45,7 @@ export default [
     name: "Orders",
     component: () => import("../views/Orders.vue"),
     meta: {
-      layout: "App",
+      layout: "User",
       middlewares: [auth],
     },
   },

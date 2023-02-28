@@ -6,8 +6,8 @@
         :key="link.id"
         :to="link.route"
         class="layout__link"
-        :class="{ 'layout__link--active': link.id === sidebarActiveTab }"
-        @click.native="handleClick(link.id)"
+        active-class="layout__link--active"
+        exact-path
       >
         {{ link.label }}
       </router-link>
@@ -16,21 +16,13 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from "vuex";
+import { mapState } from "vuex";
 
 export default {
   name: "AppSidebar",
 
   computed: {
-    ...mapGetters(["sidebarMenu", "sidebarActiveTab"]),
-  },
-
-  methods: {
-    ...mapMutations(["CHANGE_SIDEBAR_ACTIVE_TAB"]),
-
-    handleClick(id) {
-      this.CHANGE_SIDEBAR_ACTIVE_TAB(id);
-    },
+    ...mapState(["sidebarMenu"]),
   },
 };
 </script>

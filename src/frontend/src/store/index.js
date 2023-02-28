@@ -10,10 +10,9 @@ import {
   ADD_ENTITY,
   ADD_NOTIFICATION,
   DELETE_NOTIFICATION,
-  CHANGE_SIDEBAR_ACTIVE_TAB,
 } from "@/store/mutations-types";
 
-import { MESSAGE_LIVE_TIME, SIDEBAR_ACTIVE_ID } from "@/common/constants";
+import { MESSAGE_LIVE_TIME } from "@/common/constants";
 import DOUGH from "@/common/enums/dough";
 import SIDEBAR_MENU from "@/common/enums/sidebarMenu";
 
@@ -27,7 +26,6 @@ const state = () => ({
   ingredients: [],
   misc: [],
   sidebarMenu: SIDEBAR_MENU,
-  sidebarActiveTab: SIDEBAR_ACTIVE_ID,
 });
 
 const getters = {
@@ -82,14 +80,6 @@ const getters = {
     });
 
     return `Начинка: ${tmpIngredients.join(", ")}`;
-  },
-
-  sidebarMenu(state) {
-    return state.sidebarMenu;
-  },
-
-  sidebarActiveTab(state) {
-    return state.sidebarActiveTab;
   },
 };
 
@@ -191,10 +181,6 @@ const mutations = {
     state.notifications = state.notifications.filter(
       (notification) => notification.id !== id
     );
-  },
-
-  [CHANGE_SIDEBAR_ACTIVE_TAB](state, id) {
-    state.sidebarActiveTab = id;
   },
 };
 
