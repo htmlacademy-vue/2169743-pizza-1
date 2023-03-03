@@ -14,12 +14,18 @@
           type="button"
           class="button button--border"
           @click="handleRemove"
+          data-test="buttonRemove"
         >
           Удалить
         </button>
       </div>
       <div class="order__button">
-        <button type="button" class="button" @click="handleRepeat">
+        <button
+          type="button"
+          class="button"
+          @click="handleRepeat"
+          data-test="buttonRepeat"
+        >
           Повторить
         </button>
       </div>

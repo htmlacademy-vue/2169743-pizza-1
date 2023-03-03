@@ -1,16 +1,16 @@
 <template>
   <component :is="tag" class="input">
-    <span>{{ label }}</span>
+    <span :class="labelClass">{{ label }}</span>
     <input
       ref="input"
       v-bind="$attrs"
-      :value="value"
       @input="$emit('input', $event.target.value)"
     />
   </component>
 </template>
 
 <script>
+// validator, чтобы избежать пробелов в props.label -> :label="  "
 export default {
   name: "AppInput",
 
@@ -25,11 +25,22 @@ export default {
     label: {
       type: String,
       required: true,
+      validator(value) {
+        return !!value.trim();
+      },
     },
 
-    value: {
-      type: [String, Number],
-      default: "",
+    hiddenLabel: {
+      type: Boolean,
+      default: false,
+    },
+  },
+
+  computed: {
+    labelClass() {
+      return {
+        "visually-hidden": this.hiddenLabel,
+      };
     },
   },
 };

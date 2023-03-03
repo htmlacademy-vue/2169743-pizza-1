@@ -27,27 +27,30 @@ export default {
   props: {
     productName: {
       type: String,
-      default: "",
+      required: true,
+      validator(value) {
+        return !!value.trim();
+      },
     },
 
     sizeId: {
       type: Number,
-      default: 0,
+      required: true,
     },
 
     doughId: {
       type: Number,
-      default: 0,
+      required: true,
     },
 
     sauceId: {
       type: Number,
-      default: 0,
+      required: true,
     },
 
     ingredients: {
       type: Array,
-      default: () => [],
+      required: true,
     },
   },
 

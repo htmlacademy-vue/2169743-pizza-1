@@ -70,6 +70,7 @@ const getters = {
   ingredientsText: (state, getters) => (ingredients) => {
     const tmpIngredients = [];
 
+    // TODO: разные ключи (id | ingredientId) -> поправить
     ingredients.forEach(({ ingredientId }) => {
       const label = getters.getAttrItemEntity(
         "ingredients",

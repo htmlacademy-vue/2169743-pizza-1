@@ -15,7 +15,7 @@
     </div>
     <div class="header__user">
       <template v-if="isAuthenticated">
-        <router-link to="/profile">
+        <router-link to="/profile" data-test="authAction">
           <picture>
             <source type="image/webp" :srcset="userAvatar([1, 2], true)" />
             <img
@@ -28,12 +28,17 @@
           </picture>
           <span>{{ getUserAttribute("name") }}</span>
         </router-link>
-        <a href="#" class="header__logout" @click.prevent="$logout">
+        <a
+          href="#"
+          class="header__logout"
+          @click.prevent="$logout"
+          data-test="authAction"
+        >
           <span>Выйти</span>
         </a>
       </template>
       <template v-else>
-        <router-link to="/login" class="header__login">
+        <router-link to="/login" class="header__login" data-test="login-btn">
           <span>Войти</span>
         </router-link>
       </template>

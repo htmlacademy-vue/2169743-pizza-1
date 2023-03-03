@@ -30,6 +30,9 @@ export default {
     selected: {
       type: String,
       required: true,
+      validator(value) {
+        return !!value.trim();
+      },
     },
   },
 

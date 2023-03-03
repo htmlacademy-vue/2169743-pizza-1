@@ -88,7 +88,7 @@ import BuilderSauceSelector from "@/modules/builder/components/BuilderSauceSelec
 import BuilderSizeSelector from "@/modules/builder/components/BuilderSizeSelector";
 import BuilderIngredientsSelector from "@/modules/builder/components/BuilderIngredientsSelector";
 
-import generateId from "@/common/mixins/generateId.js";
+import generateId from "@/common/mixins/generateId";
 
 export default {
   name: "IndexHome",

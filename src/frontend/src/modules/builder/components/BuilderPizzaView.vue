@@ -13,10 +13,10 @@
         leave-active-class="animate__animated animate__fadeOut"
       >
         <div
-          v-for="ingredient in ingredients"
-          :key="ingredient.value"
+          v-for="{ value, quantity } in ingredients"
+          :key="value"
           class="pizza__filling"
-          :class="fillingClass(ingredient.value, ingredient.quantity)"
+          :class="fillingClass(value, quantity)"
         />
       </transition-group>
     </div>

@@ -136,16 +136,8 @@ import CartAdditionalSelector from "@/modules/cart/components/CartAdditionalSele
 
 import validator from "@/common/mixins/validator";
 
-let SETUP_OPTIONS = [
-  {
-    value: "customer",
-    name: "Получу сам",
-  },
-  {
-    value: "new address",
-    name: "Новый адрес",
-  },
-];
+import { pageCart } from "@/common/enums/inputConfig";
+import { SETUP_OPTIONS } from "@/common/enums/addressOptions";
 
 export default {
   name: "Cart",
@@ -167,34 +159,19 @@ export default {
           name: "test",
         },
         phone: {
-          label: "Контактный телефон:",
-          type: "text",
-          name: "tel",
-          placeholder: "+7 999-999-99-99",
-          value: "",
+          ...pageCart.phone,
         },
         address: {
           label: "Новый адрес:",
           field: {
             street: {
-              label: "Улица*",
-              type: "text",
-              name: "street",
-              value: "",
+              ...pageCart.address.street,
             },
             building: {
-              class: "small",
-              label: "Дом*",
-              type: "text",
-              name: "building",
-              value: "",
+              ...pageCart.address.building,
             },
             flat: {
-              class: "small",
-              label: "Квартира",
-              type: "text",
-              name: "flat",
-              value: "",
+              ...pageCart.address.flat,
             },
           },
         },

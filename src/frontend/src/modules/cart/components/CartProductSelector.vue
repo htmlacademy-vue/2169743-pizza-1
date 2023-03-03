@@ -19,7 +19,12 @@
     </div>
 
     <div class="cart-list__button">
-      <button type="button" class="cart-list__edit" @click="changeBuilder">
+      <button
+        type="button"
+        class="cart-list__edit"
+        @click="changeBuilder"
+        data-test="changeBuilder"
+      >
         Изменить
       </button>
     </div>

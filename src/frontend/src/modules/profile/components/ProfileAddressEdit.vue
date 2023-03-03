@@ -77,6 +77,8 @@
 <script>
 import validator from "@/common/mixins/validator";
 
+import { profileAddressEdit } from "@/common/enums/inputConfig";
+
 export default {
   name: "ProfileAddressEdit",
 
@@ -96,41 +98,7 @@ export default {
   data() {
     return {
       field: {
-        name: {
-          label: "Название адреса*",
-          name: "addr-name",
-          placeholder: "Введите название адреса",
-          required: true,
-          value: "",
-        },
-        street: {
-          label: "Улица*",
-          name: "addr-street",
-          placeholder: "Введите название улицы",
-          required: true,
-          value: "",
-        },
-        building: {
-          label: "Дом*",
-          name: "addr-house",
-          placeholder: "Введите название дома",
-          required: true,
-          value: "",
-        },
-        flat: {
-          label: "Квартира",
-          name: "addr-apartment",
-          placeholder: "Введите № квартиры",
-          required: true,
-          value: "",
-        },
-        comment: {
-          label: "Комментарий",
-          name: "addr-comment",
-          placeholder: "Введите комментарий",
-          required: true,
-          value: "",
-        },
+        ...profileAddressEdit.field,
       },
       validations: {
         building: {

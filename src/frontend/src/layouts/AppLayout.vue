@@ -1,6 +1,6 @@
 <template>
   <div class="app-layout">
-    <AppHeader />
+    <AppHeader data-test="header" />
 
     <slot />
   </div>

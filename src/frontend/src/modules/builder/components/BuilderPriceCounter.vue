@@ -10,7 +10,7 @@
 <script>
 import { mapGetters, mapMutations } from "vuex";
 
-import calcPrice from "@/common/mixins/calcPrice.js";
+import calcPrice from "@/common/mixins/calcPrice";
 
 export default {
   name: "BuilderPriceCounter",

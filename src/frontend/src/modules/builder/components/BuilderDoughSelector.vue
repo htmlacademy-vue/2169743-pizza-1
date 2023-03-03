@@ -21,11 +21,17 @@ export default {
     label: {
       type: String,
       required: true,
+      validator(value) {
+        return !!value.trim();
+      },
     },
 
     description: {
       type: String,
       required: true,
+      validator(value) {
+        return !!value.trim();
+      },
     },
 
     selected: {
@@ -33,7 +39,7 @@ export default {
       required: true,
     },
   },
-
+  // TODO: Переделать под id, вместо названий ?
   computed: {
     isLightDough() {
       return this.label === "Тонкое";

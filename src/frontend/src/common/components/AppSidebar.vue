@@ -8,6 +8,7 @@
         class="layout__link"
         active-class="layout__link--active"
         exact-path
+        data-test="sidebar-link"
       >
         {{ link.label }}
       </router-link>

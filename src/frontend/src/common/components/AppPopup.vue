@@ -1,7 +1,12 @@
 <template>
   <div class="popup-bg">
     <div class="popup">
-      <a href="#" class="close" @click.prevent="handleClick">
+      <a
+        href="#"
+        class="close"
+        @click.prevent="handleClick"
+        data-test="buttonClose"
+      >
         <span class="visually-hidden">Закрыть попап</span>
       </a>
       <div class="popup__title">
@@ -9,7 +14,12 @@
       </div>
       <p>Мы начали готовить Ваш заказ, скоро привезём его вам ;)</p>
       <div class="popup__button">
-        <a href="#" class="button" @click.prevent="handleClick">
+        <a
+          href="#"
+          class="button"
+          @click.prevent="handleClick"
+          data-test="buttonComplete"
+        >
           Отлично, я жду!
         </a>
       </div>

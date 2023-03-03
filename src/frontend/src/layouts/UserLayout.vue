@@ -1,9 +1,9 @@
 <template>
   <div class="user-layout">
-    <AppHeader />
+    <AppHeader data-test="header" />
 
     <main class="layout">
-      <AppSidebar />
+      <AppSidebar data-test="sidebar" />
 
       <slot />
     </main>
@@ -20,10 +20,6 @@ export default {
   components: {
     AppHeader,
     AppSidebar,
-  },
-
-  data() {
-    return {};
   },
 };
 </script>
