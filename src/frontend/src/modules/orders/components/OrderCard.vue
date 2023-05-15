@@ -14,12 +14,18 @@
           type="button"
           class="button button--border"
           @click="handleRemove"
+          data-test="buttonRemove"
         >
           Удалить
         </button>
       </div>
       <div class="order__button">
-        <button type="button" class="button" @click="handleRepeat">
+        <button
+          type="button"
+          class="button"
+          @click="handleRepeat"
+          data-test="buttonRepeat"
+        >
           Повторить
         </button>
       </div>
@@ -31,23 +37,13 @@
         v-for="pizza in order.orderPizzas"
         :key="pizza.id"
       >
-        <div class="product">
-          <img
-            src="@/assets/img/product.svg"
-            class="product__img"
-            width="56"
-            height="56"
-            :alt="pizza.name"
-          />
-          <div class="product__text">
-            <h2>{{ pizza.name }}</h2>
-            <ul>
-              <li>{{ doughText(pizza.sizeId, pizza.doughId) }}</li>
-              <li>{{ sauceText(pizza.sauceId) }}</li>
-              <li>{{ ingredientsText(pizza.ingredients) }}</li>
-            </ul>
-          </div>
-        </div>
+        <AppProduct
+          :productName="pizza.name"
+          :sizeId="pizza.sizeId"
+          :doughId="pizza.doughId"
+          :sauceId="pizza.sauceId"
+          :ingredients="pizza.ingredients"
+        />
         <p class="order__price">{{ pizzaPriceLabel(pizza) }} ₽</p>
       </li>
     </ul>
@@ -92,13 +88,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters([
-      "getItemEntity",
-      "getAttrItemEntity",
-      "doughText",
-      "sauceText",
-      "ingredientsText",
-    ]),
+    ...mapGetters(["getItemEntity", "getAttrItemEntity"]),
     ...mapGetters("Auth", ["getAddressById", "addressText"]),
 
     pizzaCost() {

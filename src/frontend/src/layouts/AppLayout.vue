@@ -1,28 +1,19 @@
 <template>
   <div class="app-layout">
-    <TheHeader />
+    <AppHeader />
 
     <slot />
   </div>
 </template>
 
 <script>
-import TheHeader from "@/common/components/TheHeader";
+import AppHeader from "@/common/components/AppHeader";
 
 export default {
   name: "AppLayout",
 
   components: {
-    TheHeader,
+    AppHeader,
   },
 };
 </script>
-
-<style lang="scss" scoped>
-.app-layout {
-  display: flex;
-  flex-direction: column;
-
-  min-height: 100vh;
-}
-</style>

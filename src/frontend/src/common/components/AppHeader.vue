@@ -11,11 +11,13 @@
       </router-link>
     </div>
     <div class="header__cart">
-      <router-link to="/cart">{{ orderPrice }} ₽</router-link>
+      <router-link to="/cart" data-test="cart-link">
+        {{ orderPrice }} ₽
+      </router-link>
     </div>
     <div class="header__user">
       <template v-if="isAuthenticated">
-        <router-link to="/profile">
+        <router-link to="/profile" data-test="auth-action">
           <picture>
             <source type="image/webp" :srcset="userAvatar([1, 2], true)" />
             <img
@@ -28,7 +30,12 @@
           </picture>
           <span>{{ getUserAttribute("name") }}</span>
         </router-link>
-        <a href="#" class="header__logout" @click.prevent="$logout">
+        <a
+          href="#"
+          class="header__logout"
+          @click.prevent="$logout"
+          data-test="logout-btn"
+        >
           <span>Выйти</span>
         </a>
       </template>
@@ -47,7 +54,7 @@ import { mapState, mapGetters } from "vuex";
 import logout from "@/common/mixins/logout";
 
 export default {
-  name: "AppSidebar",
+  name: "AppHeader",
 
   mixins: [logout],
 

@@ -3,8 +3,9 @@
     <button
       type="button"
       class="counter__button counter__button--minus"
-      :disabled="value === min"
+      :disabled="value <= min"
       @click="countHandler('decrease')"
+      data-test="buttonMinus"
     >
       <span class="visually-hidden">Меньше</span>
     </button>
@@ -19,8 +20,9 @@
       type="button"
       class="counter__button counter__button--plus"
       :class="buttonClass"
-      :disabled="value === max"
+      :disabled="value >= max"
       @click="countHandler('increase')"
+      data-test="buttonPlus"
     >
       <span class="visually-hidden">Больше</span>
     </button>
@@ -36,7 +38,7 @@ export default {
   props: {
     value: {
       type: Number,
-      required: true,
+      default: 0,
     },
 
     min: {
@@ -59,7 +61,11 @@ export default {
 
   computed: {
     buttonClass() {
-      return `counter__button--${this.color}`;
+      const modificator = `counter__button--${this.color}`;
+
+      return {
+        [modificator]: this.color,
+      };
     },
   },
 

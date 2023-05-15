@@ -1,7 +1,12 @@
 <template>
   <div class="content__result">
     <p>Итого: {{ pizzaPrice }} ₽</p>
-    <button type="submit" class="button" :disabled="disableButton">
+    <button
+      type="submit"
+      class="button"
+      :disabled="disableButton"
+      data-test="btn-submit"
+    >
       Готовьте!
     </button>
   </div>
@@ -10,7 +15,7 @@
 <script>
 import { mapGetters, mapMutations } from "vuex";
 
-import calcPrice from "@/common/mixins/calcPrice.js";
+import calcPrice from "@/common/mixins/calcPrice";
 
 export default {
   name: "BuilderPriceCounter",

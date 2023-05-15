@@ -1,17 +1,16 @@
 <template>
   <div class="selector-item">
-    <label class="input">
-      <span class="visually-hidden">Название пиццы</span>
-      <input
-        type="text"
-        name="pizza_name"
-        placeholder="Введите название пиццы"
-        required
-        autocomplete="off"
-        :value="builderName"
-        @input="handleInput($event)"
-      />
-    </label>
+    <AppInput
+      :name="appSelectorItem.field.name"
+      :placeholder="appSelectorItem.field.placeholder"
+      :required="appSelectorItem.field.required"
+      :autocomplete="appSelectorItem.field.autocomplete"
+      :tag="appSelectorItem.field.tag"
+      :label="appSelectorItem.field.label"
+      :hiddenLabel="appSelectorItem.field.hiddenLabel"
+      :value="builderName"
+      @input="handleInput"
+    />
 
     <div class="content__constructor">
       <BuilderPizzaView
@@ -38,6 +37,8 @@ import { mapGetters, mapMutations } from "vuex";
 import BuilderPizzaView from "@/modules/builder/components/BuilderPizzaView";
 import BuilderPriceCounter from "@/modules/builder/components/BuilderPriceCounter";
 
+import { appSelectorItem } from "@/common/enums/inputConfig";
+
 export default {
   name: "AppSelectorItem",
 
@@ -46,8 +47,14 @@ export default {
     BuilderPriceCounter,
   },
 
+  data() {
+    return {
+      appSelectorItem,
+    };
+  },
+
   computed: {
-    ...mapGetters("Builder", ["builder", "ingredientCount", "builderName"]),
+    ...mapGetters("Builder", ["builder", "builderName"]),
   },
 
   methods: {
@@ -57,8 +64,10 @@ export default {
       this.$emit("selectDrop", data);
     },
 
-    handleInput(e) {
-      this.SET_BUILDER_NAME(e.target.value);
+    handleInput(value) {
+      if (typeof value === "string") {
+        this.SET_BUILDER_NAME(value);
+      }
     },
   },
 };

@@ -10,24 +10,26 @@
       <div class="sign-form__input">
         <AppInput
           ref="email"
-          tag="label"
           v-model="email"
-          label="E-mail"
-          type="email"
-          name="email"
-          placeholder="example@mail.ru"
+          :tag="pageLogin.email.tag"
+          :label="pageLogin.email.label"
+          :type="pageLogin.email.type"
+          :name="pageLogin.email.name"
+          :placeholder="pageLogin.email.placeholder"
+          data-test="email"
         />
       </div>
 
       <div class="sign-form__input">
         <AppInput
           ref="password"
-          tag="label"
           v-model="password"
-          label="Пароль"
-          type="password"
-          name="pass"
-          placeholder="***********"
+          :tag="pageLogin.password.tag"
+          :label="pageLogin.password.label"
+          :type="pageLogin.password.type"
+          :name="pageLogin.password.name"
+          :placeholder="pageLogin.password.placeholder"
+          data-test="password"
         />
       </div>
       <button type="submit" class="button">Авторизоваться</button>
@@ -40,6 +42,8 @@ import { mapActions } from "vuex";
 
 import validator from "@/common/mixins/validator";
 
+import { pageLogin } from "@/common/enums/inputConfig";
+
 export default {
   name: "Login",
 
@@ -47,6 +51,7 @@ export default {
 
   data() {
     return {
+      pageLogin,
       email: "",
       password: "",
       validations: {

@@ -12,14 +12,12 @@
         enter-active-class="animate__animated animate__fadeIn"
         leave-active-class="animate__animated animate__fadeOut"
       >
-        <template v-for="{ quantity, value } in ingredients">
-          <div
-            v-for="time in quantity"
-            :key="`${value} - ${time}`"
-            class="pizza__filling"
-            :class="fillingClass(value, time)"
-          />
-        </template>
+        <div
+          v-for="{ value, quantity } in ingredients"
+          :key="value"
+          class="pizza__filling"
+          :class="fillingClass(value, quantity)"
+        />
       </transition-group>
     </div>
   </div>

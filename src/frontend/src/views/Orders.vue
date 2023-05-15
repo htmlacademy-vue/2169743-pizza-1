@@ -1,32 +1,27 @@
 <template>
-  <main class="layout">
-    <AppSidebar />
-
-    <div class="layout__content">
-      <div class="layout__title">
-        <h1 class="title title--big">История заказов</h1>
-      </div>
-
-      <template v-if="orders.length">
-        <OrderCard
-          v-for="order in orders"
-          :key="order.id"
-          :order="order"
-          @remove="removeHandler"
-          @repeat="repeatHandler"
-        />
-      </template>
-      <template v-else>
-        <p>У вас нет прошлых заказов.</p>
-      </template>
+  <div class="layout__content">
+    <div class="layout__title">
+      <h1 class="title title--big">История заказов</h1>
     </div>
-  </main>
+
+    <template v-if="orders.length">
+      <OrderCard
+        v-for="order in orders"
+        :key="order.id"
+        :order="order"
+        @remove="removeHandler"
+        @repeat="repeatHandler"
+      />
+    </template>
+    <template v-else>
+      <p>У вас нет прошлых заказов.</p>
+    </template>
+  </div>
 </template>
 
 <script>
 import { mapGetters, mapMutations, mapActions } from "vuex";
 
-import AppSidebar from "@/common/components/AppSidebar";
 import OrderCard from "@/modules/orders/components/OrderCard";
 
 import calcPrice from "@/common/mixins/calcPrice";
@@ -35,7 +30,6 @@ export default {
   name: "Orders",
 
   components: {
-    AppSidebar,
     OrderCard,
   },
 

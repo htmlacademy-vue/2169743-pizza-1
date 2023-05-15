@@ -18,8 +18,9 @@
 <script>
 import { setAuth } from "@/common/helpers";
 
-import DefaultLayout from "@/layouts/DefaultLayout.vue";
-import AppLayout from "@/layouts/AppLayout.vue";
+import DefaultLayout from "@/layouts/DefaultLayout";
+import AppLayout from "@/layouts/AppLayout";
+import UserLayout from "@/layouts/UserLayout";
 
 export default {
   name: "App",
@@ -27,6 +28,7 @@ export default {
   components: {
     DefaultLayout,
     AppLayout,
+    UserLayout,
   },
 
   computed: {
@@ -64,11 +66,16 @@ export default {
     right: 0;
     bottom: 0;
     left: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    min-height: 100vh;
   }
 }
 
 .animate__animated {
-  transition-duration: 0.75s !important;
-  animation-duration: 0.75s !important;
+  transition-duration: 0.25s !important;
+  animation-duration: 0.25s !important;
 }
 </style>

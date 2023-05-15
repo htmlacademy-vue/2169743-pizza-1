@@ -1,23 +1,12 @@
 <template>
   <component :is="tag">
-    <div class="product cart-list__product">
-      <img
-        src="@/assets/img/product.svg"
-        class="product__img"
-        width="56"
-        height="56"
-        :alt="order.name"
-      />
-      <div class="product__text">
-        <h2>{{ order.name }}</h2>
-        <ul>
-          <li>{{ doughText(order.size.id, order.dough.id) }}</li>
-          <li>{{ sauceText(order.sauce.id) }}</li>
-          <li>{{ ingredientsText(order.ingredients) }}</li>
-        </ul>
-      </div>
-    </div>
-
+    <AppProduct
+      :productName="order.name"
+      :sizeId="order.size.id"
+      :doughId="order.dough.id"
+      :sauceId="order.sauce.id"
+      :ingredients="order.ingredients"
+    />
     <AppItemCounter
       class="cart-list__counter"
       :value="$countValue"
@@ -30,7 +19,12 @@
     </div>
 
     <div class="cart-list__button">
-      <button type="button" class="cart-list__edit" @click="changeBuilder">
+      <button
+        type="button"
+        class="cart-list__edit"
+        @click="changeBuilder"
+        data-test="changeBuilder"
+      >
         Изменить
       </button>
     </div>
@@ -38,7 +32,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from "vuex";
+import { mapMutations } from "vuex";
 
 import productCount from "@/common/mixins/productCount.js";
 
@@ -60,8 +54,6 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["doughText", "sauceText", "ingredientsText"]),
-
     totalPrice() {
       return this.order.price * this.order.quantity;
     },

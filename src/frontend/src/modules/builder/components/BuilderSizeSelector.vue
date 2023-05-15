@@ -20,33 +20,21 @@ export default {
     label: {
       type: String,
       required: true,
+      validator(value) {
+        return !!value.trim();
+      },
     },
 
     selected: {
       type: String,
       required: true,
+      validator(value) {
+        return !!value.trim();
+      },
     },
   },
 
   computed: {
-    sizeClass() {
-      let modificator = "";
-
-      switch (this.label) {
-        case "32 см":
-          modificator = "normal";
-          break;
-        case "45 см":
-          modificator = "big";
-          break;
-        default:
-          modificator = "small";
-          break;
-      }
-
-      return `diameter__input--${modificator}`;
-    },
-
     sizeValue() {
       let value = "";
 
@@ -63,6 +51,10 @@ export default {
       }
 
       return value;
+    },
+
+    sizeClass() {
+      return `diameter__input--${this.sizeValue}`;
     },
   },
 

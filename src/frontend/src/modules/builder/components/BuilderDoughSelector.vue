@@ -21,11 +21,17 @@ export default {
     label: {
       type: String,
       required: true,
+      validator(value) {
+        return !!value.trim();
+      },
     },
 
     description: {
       type: String,
       required: true,
+      validator(value) {
+        return !!value.trim();
+      },
     },
 
     selected: {

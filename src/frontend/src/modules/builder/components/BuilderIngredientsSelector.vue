@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import INGREDIENT from "@/common/enums/ingredient";
+import { ingredientVal } from "@/common/helpers";
 
 export default {
   name: "BuilderIngredientsSelector",
@@ -34,6 +34,9 @@ export default {
     label: {
       type: String,
       required: true,
+      validator(value) {
+        return !!value.trim();
+      },
     },
 
     selected: {
@@ -49,15 +52,7 @@ export default {
 
   computed: {
     ingredientValue() {
-      let value = "";
-
-      for (const key in INGREDIENT) {
-        if (this.label === INGREDIENT[key]) {
-          value = key;
-        }
-      }
-
-      return value;
+      return ingredientVal(this.label);
     },
 
     ingredientClass() {
