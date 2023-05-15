@@ -11,11 +11,13 @@
       </router-link>
     </div>
     <div class="header__cart">
-      <router-link to="/cart">{{ orderPrice }} ₽</router-link>
+      <router-link to="/cart" data-test="cart-link">
+        {{ orderPrice }} ₽
+      </router-link>
     </div>
     <div class="header__user">
       <template v-if="isAuthenticated">
-        <router-link to="/profile" data-test="authAction">
+        <router-link to="/profile" data-test="auth-action">
           <picture>
             <source type="image/webp" :srcset="userAvatar([1, 2], true)" />
             <img
@@ -32,13 +34,13 @@
           href="#"
           class="header__logout"
           @click.prevent="$logout"
-          data-test="authAction"
+          data-test="logout-btn"
         >
           <span>Выйти</span>
         </a>
       </template>
       <template v-else>
-        <router-link to="/login" class="header__login" data-test="login-btn">
+        <router-link to="/login" class="header__login">
           <span>Войти</span>
         </router-link>
       </template>
@@ -52,7 +54,7 @@ import { mapState, mapGetters } from "vuex";
 import logout from "@/common/mixins/logout";
 
 export default {
-  name: "AppSidebar",
+  name: "AppHeader",
 
   mixins: [logout],
 

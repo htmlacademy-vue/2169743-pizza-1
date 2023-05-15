@@ -39,7 +39,7 @@ export default {
       required: true,
     },
   },
-  // TODO: Переделать под id, вместо названий ?
+
   computed: {
     isLightDough() {
       return this.label === "Тонкое";

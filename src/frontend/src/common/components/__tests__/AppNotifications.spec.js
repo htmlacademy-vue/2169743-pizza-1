@@ -18,7 +18,7 @@ describe("AppNotifications", () => {
   };
 
   afterEach(() => {
-    wrapper.destroy();
+    wrapper?.destroy();
     mocks.$store.state.notifications = [];
   });
 

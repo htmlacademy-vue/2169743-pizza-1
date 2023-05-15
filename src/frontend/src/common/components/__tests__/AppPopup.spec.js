@@ -10,20 +10,20 @@ describe("AppPopup", () => {
   };
 
   afterEach(() => {
-    wrapper.destroy();
+    wrapper?.destroy();
   });
 
-  it("It Emits click event", () => {
+  it("It Emits click event on CloseButton", async () => {
     createComponent();
     let buttonClose = wrapper.find("[data-test='buttonClose']");
-    buttonClose.trigger("click");
+    await buttonClose.trigger("click");
     expect(wrapper.emitted().close).toBeTruthy();
   });
 
-  it("It Emits click event", () => {
+  it("It Emits click event on CompleteButton", async () => {
     createComponent();
     let buttonComplete = wrapper.find("[data-test='buttonComplete']");
-    buttonComplete.trigger("click");
+    await buttonComplete.trigger("click");
     expect(wrapper.emitted().close).toBeTruthy();
   });
 });

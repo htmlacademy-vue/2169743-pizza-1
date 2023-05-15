@@ -1,7 +1,12 @@
 <template>
   <div class="content__result">
     <p>Итого: {{ pizzaPrice }} ₽</p>
-    <button type="submit" class="button" :disabled="disableButton">
+    <button
+      type="submit"
+      class="button"
+      :disabled="disableButton"
+      data-test="btn-submit"
+    >
       Готовьте!
     </button>
   </div>

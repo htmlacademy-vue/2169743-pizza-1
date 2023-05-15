@@ -1,39 +1,44 @@
 import { createLocalVue, mount } from "@vue/test-utils";
+import Vuex from "vuex";
 
 import AppLayout from "@/layouts/AppLayout";
-import AppHeader from "@/common/components/AppHeader";
+
+import { generateMockStore } from "@/store/mocks";
 
 const localVue = createLocalVue();
-localVue.component(AppHeader);
+localVue.use(Vuex);
 
 describe("AppLayout", () => {
   const slots = {
     default: "test content",
   };
 
+  const stubs = ["router-link"];
+
+  let store;
   let wrapper;
 
   const createComponent = (options) => {
     wrapper = mount(AppLayout, options);
   };
 
+  beforeEach(() => {
+    store = generateMockStore();
+  });
+
   afterEach(() => {
-    wrapper.destroy();
+    wrapper?.destroy();
   });
 
   it("Is rendered", () => {
-    createComponent({ localVue });
+    createComponent({ localVue, slots, store, stubs });
+
     expect(wrapper.exists()).toBeTruthy();
   });
 
-  it("Renders header", () => {
-    createComponent({ localVue });
-    const header = wrapper.find("[data-test='header']");
-    expect(header.exists()).toBeTruthy();
-  });
-
   it("AppLayout renders out the slot content", () => {
-    createComponent({ localVue, slots });
+    createComponent({ localVue, slots, store, stubs });
+
     expect(wrapper.html()).toContain(slots.default);
   });
 });

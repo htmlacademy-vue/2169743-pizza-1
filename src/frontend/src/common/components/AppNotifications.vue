@@ -3,8 +3,7 @@
     <div
       v-for="({ text, type }, index) in notifications"
       :key="index"
-      class="notification"
-      :class="notificationClass(type)"
+      :class="`notification notification--${type}`"
     >
       <span>{{ text }}</span>
     </div>
@@ -19,12 +18,6 @@ export default {
 
   computed: {
     ...mapState(["notifications"]),
-  },
-
-  methods: {
-    notificationClass(type) {
-      return `notification--${type}`;
-    },
   },
 };
 </script>

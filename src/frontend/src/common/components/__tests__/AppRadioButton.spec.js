@@ -21,31 +21,35 @@ describe("AppRadioButton", () => {
   });
 
   afterEach(() => {
-    wrapper.destroy();
+    wrapper?.destroy();
   });
 
   it("Input name is prop name", () => {
     createComponent({ propsData });
     let input = wrapper.find("input");
+
     expect(input.attributes("name")).toBe(propsData.name);
   });
 
   it("It sets the initial value", () => {
     createComponent({ propsData });
+
     expect(wrapper.find("input").element.value).toBe(propsData.value);
   });
 
-  it("It emits an input event when change value", () => {
+  it("It emits an input event when change value", async () => {
     createComponent({ propsData });
     let input = wrapper.find("input");
-    input.trigger("input");
+    await input.trigger("input");
+
     expect(wrapper.emitted().input).toBeTruthy();
   });
 
   it("Input checked is truthy", () => {
     createComponent({ propsData });
     let input = wrapper.find("input");
-    expect(input.attributes("checked")).toBe(true);
+
+    expect(input.element.checked).toBeTruthy();
   });
 
   it("Input checked is falsy", () => {
@@ -53,6 +57,7 @@ describe("AppRadioButton", () => {
 
     createComponent({ propsData });
     let input = wrapper.find("input");
-    expect(input.attributes("checked")).toBe(false);
+
+    expect(input.element.checked).toBeFalsy();
   });
 });

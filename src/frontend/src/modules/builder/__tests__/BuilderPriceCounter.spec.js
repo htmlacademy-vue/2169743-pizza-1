@@ -1,8 +1,13 @@
-import { shallowMount } from "@vue/test-utils";
+import { createLocalVue, shallowMount } from "@vue/test-utils";
+import Vuex from "vuex";
 
-import BuilderPriceCounter from "@/modules/components/BuilderPriceCounter";
+import BuilderPriceCounter from "@/modules/builder/components/BuilderPriceCounter";
 
+import { generateMockStore } from "@/store/mocks";
 import pizza from "@/static/pizza.json";
+
+const localVue = createLocalVue();
+localVue.use(Vuex);
 
 describe("BuilderPriceCounter", () => {
   const propsData = {
@@ -12,21 +17,31 @@ describe("BuilderPriceCounter", () => {
     ingredients: [],
   };
 
-  // TODO_CALL:
-  const vuexComputed = {};
-
   let wrapper;
+  let store;
 
   const createComponent = (options) => {
     wrapper = shallowMount(BuilderPriceCounter, options);
   };
 
-  afterEach(() => {
-    wrapper.destroy();
+  beforeEach(() => {
+    store = generateMockStore();
   });
 
-  it("Check pizza price", () => {
-    createComponent({ propsData });
-    expect(123).toBe(123);
+  afterEach(() => {
+    wrapper?.destroy();
+  });
+
+  it("Render pizza price text", () => {
+    createComponent({ localVue, store, propsData });
+
+    expect(wrapper.html()).toContain("350");
+  });
+
+  it("Submit button is disable", () => {
+    createComponent({ localVue, store, propsData });
+    let btn = wrapper.find("[data-test='btn-submit']");
+
+    expect(btn.attributes("disabled")).toBe("disabled");
   });
 });

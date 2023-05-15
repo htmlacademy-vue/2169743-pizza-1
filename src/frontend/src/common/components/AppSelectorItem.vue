@@ -54,7 +54,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters("Builder", ["builder", "ingredientCount", "builderName"]),
+    ...mapGetters("Builder", ["builder", "builderName"]),
   },
 
   methods: {

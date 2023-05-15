@@ -10,24 +10,26 @@
       <div class="sign-form__input">
         <AppInput
           ref="email"
+          v-model="email"
           :tag="pageLogin.email.tag"
           :label="pageLogin.email.label"
           :type="pageLogin.email.type"
           :name="pageLogin.email.name"
           :placeholder="pageLogin.email.placeholder"
-          v-model="email"
+          data-test="email"
         />
       </div>
 
       <div class="sign-form__input">
         <AppInput
           ref="password"
+          v-model="password"
           :tag="pageLogin.password.tag"
           :label="pageLogin.password.label"
           :type="pageLogin.password.type"
           :name="pageLogin.password.name"
           :placeholder="pageLogin.password.placeholder"
-          v-model="password"
+          data-test="password"
         />
       </div>
       <button type="submit" class="button">Авторизоваться</button>

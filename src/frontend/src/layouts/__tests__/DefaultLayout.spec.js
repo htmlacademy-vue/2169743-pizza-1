@@ -14,16 +14,18 @@ describe("DefaultLayout", () => {
   };
 
   afterEach(() => {
-    wrapper.destroy();
+    wrapper?.destroy();
   });
 
   it("Is rendered", () => {
     createComponent({ slots });
+
     expect(wrapper.exists()).toBeTruthy();
   });
 
   it("DefaultLayout renders out the slot content", () => {
     createComponent({ slots });
+
     expect(wrapper.html()).toContain(slots.default);
   });
 });

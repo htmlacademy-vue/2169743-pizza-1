@@ -10,6 +10,7 @@
       :value="sauceValue(item.name)"
       :label="item.name"
       :selected="selected"
+      data-test="sauce-radio"
       @input="handleInput"
     />
   </div>

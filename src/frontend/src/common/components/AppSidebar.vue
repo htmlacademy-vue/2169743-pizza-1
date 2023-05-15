@@ -1,5 +1,5 @@
 <template>
-  <div class="layout__sidebar sidebar">
+  <div class="layout__sidebar sidebar" data-test="sidebar">
     <template v-if="sidebarMenu.length">
       <router-link
         v-for="link in sidebarMenu"
@@ -8,7 +8,6 @@
         class="layout__link"
         active-class="layout__link--active"
         exact-path
-        data-test="sidebar-link"
       >
         {{ link.label }}
       </router-link>

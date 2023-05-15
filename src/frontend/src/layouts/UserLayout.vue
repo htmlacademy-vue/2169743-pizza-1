@@ -1,9 +1,9 @@
 <template>
   <div class="user-layout">
-    <AppHeader data-test="header" />
+    <AppHeader />
 
     <main class="layout">
-      <AppSidebar data-test="sidebar" />
+      <AppSidebar />
 
       <slot />
     </main>

@@ -4,10 +4,6 @@ import BuilderDoughSelector from "@/modules/builder/components/BuilderDoughSelec
 
 describe("BuilderDoughSelector", () => {
   let propsData;
-
-  // ? а если у нас computed свойства
-  let computedValue;
-
   let wrapper;
 
   const createComponent = (options) => {
@@ -16,37 +12,71 @@ describe("BuilderDoughSelector", () => {
 
   beforeEach(() => {
     propsData = {
-      label: "testLabel",
+      label: "Тонкое",
       description: "testDescription",
-      selected: "testLabel",
-    };
-
-    computedValue = {
-      doughType: "light",
-      doughValue: "small",
+      selected: "Тонкое",
     };
   });
 
   afterEach(() => {
-    wrapper.destroy();
-  });
-
-  it("It sets the initial model value", () => {
-    createComponent({ propsData });
-    expect(wrapper.find("input").element.value).toBe(computedValue.doughValue);
+    wrapper?.destroy();
   });
 
   it("Input checked is truthy", () => {
     createComponent({ propsData });
-    let input = wrapper.find("input");
-    expect(input.attributes("checked")).toBe(true);
+
+    expect(wrapper.find("input").element.checked).toBeTruthy();
   });
 
-  it("Input checked is truthy", () => {
+  it("Input checked is falsy", () => {
     propsData.selected = "testLabel2";
 
     createComponent({ propsData });
+
+    expect(wrapper.find("input").element.checked).toBeFalsy();
+  });
+
+  it("It emits an input event when change value", async () => {
+    createComponent({ propsData });
     let input = wrapper.find("input");
-    expect(input.attributes("checked")).toBe(false);
+    await input.trigger("input");
+
+    expect(wrapper.emitted().input).toBeTruthy();
+  });
+
+  it("Computed light dough", () => {
+    const localThis = {
+      label: "Тонкое",
+      description: "test description",
+      selected: "Тонкое",
+    };
+
+    expect(BuilderDoughSelector.computed.isLightDough.call(localThis)).toBe(
+      true
+    );
+    expect(
+      BuilderDoughSelector.computed.doughType.call({
+        ...localThis,
+        isLightDough: true,
+      })
+    ).toBe("light");
+    expect(
+      BuilderDoughSelector.computed.doughValue.call({
+        ...localThis,
+        isLightDough: true,
+      })
+    ).toBe("small");
+    expect(
+      BuilderDoughSelector.computed.doughClass.call({
+        ...localThis,
+        doughType: "light",
+      })
+    ).toBe("dough__input--light");
+  });
+
+  it("It sets the initial value", () => {
+    createComponent({ propsData });
+
+    expect(wrapper.find("input").element.value).toBe("light");
   });
 });

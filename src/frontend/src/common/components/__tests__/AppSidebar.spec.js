@@ -2,20 +2,20 @@ import { shallowMount } from "@vue/test-utils";
 
 import AppSidebar from "@/common/components/AppSidebar";
 
-const mocks = {
-  $store: {
-    state: {
-      sidebarMenu: [],
-    },
-  },
-  $router: {
-    push: jest.fn(),
-  },
-};
-
-const stubs = ["router-link"];
-
 describe("AppSidebar", () => {
+  const mocks = {
+    $store: {
+      state: {
+        sidebarMenu: [],
+      },
+    },
+    $router: {
+      push: jest.fn(),
+    },
+  };
+
+  const stubs = ["router-link"];
+
   let wrapper;
 
   const createComponent = (options) => {
@@ -23,23 +23,28 @@ describe("AppSidebar", () => {
   };
 
   afterEach(() => {
-    wrapper.destroy();
+    wrapper?.destroy();
     mocks.$store.state.sidebarMenu = [];
   });
 
   it("Is rendered", () => {
     createComponent({ mocks, stubs });
+
     expect(wrapper.exists()).toBeTruthy();
   });
 
-  // ? не до конца понятно, а если у нас несколько элементов. Или тут достаточно одного
-  it("Redirects to own route on click", async () => {
+  it("Links renders", async () => {
     mocks.$store.state.sidebarMenu = [
-      { id: 5, route: "/profile", label: "testProfile" },
+      { id: 1, route: "/profile", label: "testProfile" },
+      { id: 2, route: "/orders", label: "testOrders" },
     ];
+
     createComponent({ mocks, stubs });
-    let link = wrapper.find("[data-test='sidebar-links']");
-    await link.trigger("click");
-    expect(mocks.$router.push).toHaveBeenCalled("/profile");
+    let sidebar = wrapper.find("[data-test='sidebar']");
+
+    mocks.$store.state.sidebarMenu.forEach((link) => {
+      expect(sidebar.html()).toContain(link.route);
+      expect(sidebar.html()).toContain(link.label);
+    });
   });
 });

@@ -10,7 +10,6 @@
 </template>
 
 <script>
-// validator, чтобы избежать пробелов в props.label -> :label="  "
 export default {
   name: "AppInput",
 
